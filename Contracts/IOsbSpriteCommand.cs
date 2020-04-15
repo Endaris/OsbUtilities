@@ -15,9 +15,13 @@ namespace Contracts
 
     public interface IOsbSpriteCommand : IOsbCommand
     {
+        new double StartTime { get; set; }
+        new double EndTime { get; set; }
+        new string Identifier { get; set; }
+        new int Line { get; set;  }
         Type ValueType { get; }
-        object StartValue { get; }
-        object EndValue { get; }
+        object StartValue { get; set; }
+        object EndValue { get; set; }
     }
 
     public interface IOsbSpriteCommand<TValue> : IOsbSpriteCommand
@@ -26,6 +30,5 @@ namespace Contracts
         double Duration => EndTime - StartTime;
         new TValue StartValue { get; }
         new TValue EndValue { get; }
-        int Depth { get; }
     }
 }

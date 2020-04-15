@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using Contracts;
 using Contracts.Enums;
+using MapReader.Parsing;
 
 namespace MapReader
 {

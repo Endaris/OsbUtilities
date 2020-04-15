@@ -14,10 +14,25 @@ namespace Contracts
         public double Duration => EndTime - StartTime;
         public TValue StartValue { get; set; }
         public TValue EndValue { get; set; }
-        object IOsbSpriteCommand.StartValue => StartValue;
-        object IOsbSpriteCommand.EndValue => EndValue;
+        object IOsbSpriteCommand.StartValue
+        {
+            get { return StartValue; }
+            set
+            {
+                if (value is TValue)
+                    StartValue = (TValue)value;
+            }
+        }
+        object IOsbSpriteCommand.EndValue 
+        {
+            get { return EndValue; }
+            set
+            {
+                if (value is TValue)
+                    EndValue = (TValue)value;
+            }
+        }
         public Type ValueType { get { return typeof(TValue); } }
-        public int Depth { get; set; }
         public int Line { get; set; }
     }
 }

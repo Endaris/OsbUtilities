@@ -13,5 +13,10 @@ namespace Contracts.Commands
         public string Identifier { get; set; }
         public int Line { get; set; }
         public int LoopCount { get; set; }
+        public double LoopDuration { get
+            {
+                return OsbCommands.Select(c => c.EndTime).OrderBy(t => t).Last();
+            } 
+        }
     }
 }

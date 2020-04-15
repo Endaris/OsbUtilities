@@ -6,8 +6,10 @@ namespace Contracts
 {
     public class Storyboard
     {
-        public IEnumerable<OsbElement> OsbElements { get; set; } = new List<OsbElement>();
+        public string FilePath { get; set; }
+        public string OsbVersion { get; set; } = "0";
+        public IEnumerable<VisualElement> OsbElements { get; set; } = new List<VisualElement>();
 
-        //Storyboarded Sounds
+        //TODO Storyboarded Sounds
     }
 }

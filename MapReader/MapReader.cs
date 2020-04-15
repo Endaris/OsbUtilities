@@ -19,7 +19,9 @@ namespace MapReader
         {
             OsbReader osbReader = new OsbReader();
             var content = GetOsbContent();
-            return osbReader.GetMainStoryboard(content);
+            var storyboard = osbReader.GetMainStoryboard(content);
+            storyboard.FilePath = GetFileName();
+            return storyboard;
         }
 
         private string GetFileName()

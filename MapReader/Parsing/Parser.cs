@@ -8,103 +8,49 @@ using Contracts;
 using Contracts.Commands;
 using Contracts.Enums;
 
-namespace MapReader
+namespace MapReader.Parsing
 {
-    internal class EventsToObjectMapper
+    public class Parser
     {
-        public Storyboard GetStoryboard(List<string> content)
+        public VisualElement Parse(ParsingElement element)
         {
-            int lineStart = GetEventSectionStartAsLineNumber(content);
-
-            if (lineStart < 0)
-                throw new FormatException("Content contains no Event section");
-
-            List<ParsingElement> parsingElements = GetParsingElements(content, lineStart);
-            Storyboard storyboard = new Storyboard();
-            Parser parser = new Parser();
-
-            foreach(ParsingElement parsingElement in parsingElements)
+            try
             {
-                storyboard.OsbElements = storyboard.OsbElements.Append(parser.Parse(parsingElement));
-            }
+                VisualElement osbElement = GetOsbElement(element.Lines.FirstOrDefault(), element.LineStart);
 
-            return storyboard;
-        }
-
-        private int GetEventSectionStartAsLineNumber(List<string> content)
-        {
-            int index = content.IndexOf("[Events]");
-            if (index < 0)
-                return index;
-            else
-                return index + 1;
-        }
-
-        private List<ParsingElement> GetParsingElements(List<string> content, int lineStart)
-        {
-            List<ParsingElement> parsingElements = new List<ParsingElement>();
-            ParsingElement parsingElement = new ParsingElement();
-            //<= because it's 1 based for the linenumber, not 0 based for the index
-            for (int lineNumber = lineStart; lineNumber <= content.Count; lineNumber++)
-            {
-                string line = content[lineNumber - 1];
-
-                //we reached the end of the eventsection
-                if (string.IsNullOrWhiteSpace(line))
-                    break;
-
-                if (line.StartsWith("//") || line == "[Events]")
-                    continue;
-
-                if (!line.StartsWith(' '))
+                for (int i = 1; i < element.Lines.Count; i++)
                 {
-                    parsingElement = new ParsingElement();
-                    parsingElement.LineStart = lineNumber;
-                    parsingElements.Add(parsingElement);
+                    var values = element.Lines[i].Trim().Split(',');
+
+                    if (IsCompoundCommand(values[0]))
+                    {
+                        List<string> Lines = GetCompoundCommandLines(element, i);
+                        osbElement.Commands = osbElement.Commands.Append(ParseCompoundCommandLine(Lines, element.LineStart));
+                        i = i + Lines.Count - 1;
+                    }
+                    else
+                    {
+                        osbElement.Commands = osbElement.Commands.Append(ParseCommandLine(element.Lines[i], element.LineStart + i));
+
+                    }
                 }
 
-                parsingElement.Lines.Add(line);
-            }
-            return parsingElements;
-        }
-    }
-
-    class ParsingElement
-    {
-        public List<string> Lines { get; set; } = new List<string>();
-        public int LineStart { get; set; }
-    }
-
-    class Parser
-    {
-        public OsbElement Parse(ParsingElement element)
-        {
-            OsbElement osbElement = GetOsbElement(element.Lines.FirstOrDefault(), element.LineStart);
-
-            for (int i = 1; i < element.Lines.Count; i++)
+                return osbElement;
+            }        
+            catch (Exception)
             {
-                var values = element.Lines[i].Trim().Split(',');
-
-                if (IsCompoundCommand(values[0]))
-                {
-                    List<string> Lines = element.Lines.TakeLast(element.Lines.Count - i)
-                                                      .TakeWhile(l => l.TakeWhile(Char.IsWhiteSpace).Count() > element.Lines[i].TakeWhile(Char.IsWhiteSpace).Count()
-                                                                   || l.Equals(element.Lines[i]))
-                                                      .ToList();
-                    osbElement.Commands = osbElement.Commands.Append(ParseCompoundCommandLine(Lines, element.LineStart));
-                    i = i + Lines.Count - 1;
-                }
-                else
-                {
-                    osbElement.Commands = osbElement.Commands.Append(ParseCommandLine(element.Lines[i], element.LineStart + i));
-                    
-                }
+                throw new Exception($"Parsing commands failed for element at line {element.LineStart}");
             }
-
-            return osbElement;
         }
 
-        private IOsbSpriteCommand ParseCommandLine(string line, int lineNumber)
+        public List<string> GetCompoundCommandLines(ParsingElement element, int i)
+        {
+            var lines = element.Lines.GetRange(i, element.Lines.Count - i);
+            return lines.TakeWhile(l => l.TakeWhile(Char.IsWhiteSpace).Count() > lines[0].TakeWhile(Char.IsWhiteSpace).Count()
+                                      || ReferenceEquals(l, lines[0])).ToList();
+        }
+
+        public IOsbSpriteCommand ParseCommandLine(string line, int lineNumber)
         {
             var values = line.Trim().Split(',');
 
@@ -122,7 +68,7 @@ namespace MapReader
                     {
                         var startValue = double.Parse(values[4], CultureInfo.InvariantCulture);
                         var endValue = values.Length > 5 ? double.Parse(values[5], CultureInfo.InvariantCulture) : startValue;
-                        return new OsbCommand<double>()
+                        return new FadeCommand()
                         {
                             Easing = easing,
                             Identifier = commandType,
@@ -137,7 +83,7 @@ namespace MapReader
                     {
                         var startValue = double.Parse(values[4], CultureInfo.InvariantCulture);
                         var endValue = values.Length > 5 ? double.Parse(values[5], CultureInfo.InvariantCulture) : startValue;
-                        return new OsbCommand<double>()
+                        return new ScaleCommand()
                         {
                             Easing = easing,
                             Identifier = commandType,
@@ -154,7 +100,7 @@ namespace MapReader
                         var startY = double.Parse(values[5], CultureInfo.InvariantCulture);
                         var endX = values.Length > 6 ? double.Parse(values[6], CultureInfo.InvariantCulture) : startX;
                         var endY = values.Length > 7 ? double.Parse(values[7], CultureInfo.InvariantCulture) : startY;
-                        return new OsbCommand<CommandScale>()
+                        return new VectorScaleCommand()
                         {
                             Easing = easing,
                             Identifier = commandType,
@@ -169,7 +115,7 @@ namespace MapReader
                     {
                         var startValue = double.Parse(values[4], CultureInfo.InvariantCulture);
                         var endValue = values.Length > 5 ? double.Parse(values[5], CultureInfo.InvariantCulture) : startValue;
-                        return new OsbCommand<double>()
+                        return new RotateCommand()
                         {
                             Easing = easing,
                             Identifier = commandType,
@@ -186,7 +132,7 @@ namespace MapReader
                         var startY = double.Parse(values[5], CultureInfo.InvariantCulture);
                         var endX = values.Length > 6 ? double.Parse(values[6], CultureInfo.InvariantCulture) : startX;
                         var endY = values.Length > 7 ? double.Parse(values[7], CultureInfo.InvariantCulture) : startY;
-                        return new OsbCommand<CommandPosition>()
+                        return new MoveCommand()
                         {
                             Easing = easing,
                             Identifier = commandType,
@@ -201,7 +147,7 @@ namespace MapReader
                     {
                         var startValue = double.Parse(values[4], CultureInfo.InvariantCulture);
                         var endValue = values.Length > 5 ? double.Parse(values[5], CultureInfo.InvariantCulture) : startValue;
-                        return new OsbCommand<double>()
+                        return new MoveXCommand()
                         {
                             Easing = easing,
                             Identifier = commandType,
@@ -216,7 +162,7 @@ namespace MapReader
                     {
                         var startValue = double.Parse(values[4], CultureInfo.InvariantCulture);
                         var endValue = values.Length > 5 ? double.Parse(values[5], CultureInfo.InvariantCulture) : startValue;
-                        return new OsbCommand<double>()
+                        return new MoveYCommand()
                         {
                             Easing = easing,
                             Identifier = commandType,
@@ -235,7 +181,7 @@ namespace MapReader
                         var endR = values.Length > 7 ? byte.Parse(values[7], CultureInfo.InvariantCulture) : startR;
                         var endG = values.Length > 8 ? byte.Parse(values[8], CultureInfo.InvariantCulture) : startG;
                         var endB = values.Length > 9 ? byte.Parse(values[9], CultureInfo.InvariantCulture) : startB;
-                        return new OsbCommand<CommandColor>()
+                        return new ColorCommand()
                         {
                             Easing = easing,
                             Identifier = commandType,
@@ -249,7 +195,7 @@ namespace MapReader
                 case "P":
                     {
                         var type = GetParameterType(values[4]);
-                        return new OsbCommand<ParameterType>()
+                        return new ParameterCommand()
                         {
                             Easing = easing,
                             Identifier = commandType,
@@ -269,7 +215,7 @@ namespace MapReader
         {
             IOsbCompoundCommand osbCompoundCommand = GetOsbCompoundCommand(lines.FirstOrDefault(), lineStart);
 
-            for(int i = 1; i < lines.Count; i++)
+            for (int i = 1; i < lines.Count; i++)
             {
                 osbCompoundCommand.OsbCommands = osbCompoundCommand.OsbCommands.Append(ParseCommandLine(lines[i], lineStart + i));
             }
@@ -277,7 +223,7 @@ namespace MapReader
             return osbCompoundCommand;
         }
 
-        private IOsbCompoundCommand GetOsbCompoundCommand(string line, int lineStart)
+        public IOsbCompoundCommand GetOsbCompoundCommand(string line, int lineStart)
         {
             if (string.IsNullOrWhiteSpace(line))
                 throw new FormatException($"CompoundCommand in line {lineStart} cannot be read");
@@ -342,11 +288,11 @@ namespace MapReader
                 case "A": return ParameterType.AdditiveBlending;
                 case "H": return ParameterType.FlipHorizontal;
                 case "V": return ParameterType.FlipVertical;
-                default: return ParameterType.None;
+                default: throw new FormatException($"Unknown parametertype '{paramIdentifier}'");
             }
         }
 
-        private OsbElement GetOsbElement(string line, int lineNumber)
+        private VisualElement GetOsbElement(string line, int lineNumber)
         {
             if (string.IsNullOrWhiteSpace(line))
                 throw new FormatException("Sprite Initialisation could not be read");
@@ -358,7 +304,7 @@ namespace MapReader
             var path = removePathQuotes(values[3]);
             var x = float.Parse(values[4], CultureInfo.InvariantCulture);
             var y = float.Parse(values[5], CultureInfo.InvariantCulture);
-            return new OsbElement()
+            return new VisualElement()
             {
                 Anchor = origin,
                 Layer = GetLayer(layerName),
@@ -366,8 +312,7 @@ namespace MapReader
                 LineInitialisation = line,
                 X = x,
                 Y = y,
-                Path = path,
-                Sprite = GetRectangle(path),
+                RelativePath = path,
                 Commands = new List<IOsbCommand>(),
             };
         }
@@ -387,13 +332,13 @@ namespace MapReader
                 case "Overlay":
                     return OsbLayer.Overlay;
                 default:
-                    return OsbLayer.Background;
+                    throw new FormatException($"Unknown layername '{layerName}'");
             }
         }
 
         private static string removePathQuotes(string path)
         {
-            return path.StartsWith("\"") && path.EndsWith("\"") ? path.Substring(1, path.Length - 2) : path;
+            return path.StartsWith("\"") && path.EndsWith("\"") ? path[1..^1] : path;
         }
 
         public Rectangle GetRectangle(string RelativePath)

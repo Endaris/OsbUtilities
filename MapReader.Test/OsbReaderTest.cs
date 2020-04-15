@@ -4,7 +4,7 @@ using Xunit;
 
 namespace MapReader.Test
 {
-    public class EventsToObjectMapperTest
+    public class OsbReaderTest
     {
         [Fact]
         public void ValidSBParses()
@@ -15,5 +15,7 @@ namespace MapReader.Test
             Assert.True(sb.OsbElements.Count() > 0);
             Assert.True(sb.OsbElements.All(e => e.Commands.Count() > 0));
         }
+
+
     }
 }

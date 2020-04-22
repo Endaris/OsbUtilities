@@ -10,6 +10,13 @@ namespace OsbAnalyzer
 {
     public class OsbAnalyzer
     {
+        private List<IAnalyser> Analysers = new List<IAnalyser>()
+        {
+            new ConflictAnalyser(),
+            new ProlongedActivityAnalyser(),
+            new FadeOutAnalyser(),
+        };
+
         public AnalysedStoryboard Analyse(Storyboard storyboard)
         {
             return new AnalysedStoryboard()
@@ -30,8 +37,7 @@ namespace OsbAnalyzer
         private List<StoryboardWarning> GenerateWarnings(VisualElement visualElement)
         {
             List<StoryboardWarning> storyboardWarnings = new List<StoryboardWarning>();
-            ConflictAnalyser conflictAnalyser = new ConflictAnalyser();
-            storyboardWarnings.AddRange(conflictAnalyser.FindConflicts(visualElement));
+            Analysers.ForEach(a => storyboardWarnings.AddRange(a.Analyse(visualElement)));
             return storyboardWarnings;
         }
     }

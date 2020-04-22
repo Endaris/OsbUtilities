@@ -6,5 +6,6 @@ namespace Contracts.Commands
 {
     public class ScaleCommand : OsbCommand<double>
     {
+        public override double DefaultValue => 1;
     }
 }

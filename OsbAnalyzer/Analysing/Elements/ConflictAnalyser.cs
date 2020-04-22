@@ -5,21 +5,30 @@ using System.Text;
 using Contracts;
 using OsbAnalyzer.Contracts.Warnings;
 using OsbAnalyzer.Analysing.Helper;
+using OsbAnalyzer.Contracts;
 
 namespace OsbAnalyzer.Analysing.Elements
 {
-    public class ConflictAnalyser
+    public class ConflictAnalyser : IAnalyser
     {
-        public List<ConflictingCommandsWarning> FindConflicts(VisualElement visualElement)
+        public List<StoryboardWarning> Analyse(VisualElement visualElement)
         {
-            List<ConflictingCommandsWarning> conflictingCommandsWarnings = new List<ConflictingCommandsWarning>();
+            return FindConflicts(visualElement);
+        }
+
+
+        public List<StoryboardWarning> FindConflicts(VisualElement visualElement)
+        {
+            List<StoryboardWarning> conflictingCommandsWarnings = new List<StoryboardWarning>();
             var commands = AnalysingHelper.ResolveLoops(visualElement.Commands);
             commands = AnalysingHelper.ResolveTriggers(commands);
 
-            var commandGroups = commands.GroupBy(c => c.Identifier);
-            var spriteCommandGroups = commands.Where(c => c is IOsbSpriteCommand).GroupBy(c => c.Identifier);
+            var spriteCommandGroups = commands.Where(c => c is IOsbSpriteCommand)
+                                              .Select(c => (IOsbSpriteCommand)c)
+                                              .GroupBy(c => c.Identifier);
+            //var spriteCommandGroup = commands.Where(c => c is IOsbSpriteCommand).GroupBy(c => c.Identifier);
 
-            foreach(var group in spriteCommandGroups)
+            foreach (var group in spriteCommandGroups)
             {
                 for(int i = 0; i < group.Count(); i++)
                 {
@@ -35,7 +44,7 @@ namespace OsbAnalyzer.Analysing.Elements
             return conflictingCommandsWarnings;
         }
 
-        public List<ConflictingCommandsWarning> FindConflictingTimes(IOsbCommand cmd1, IOsbCommand cmd2)
+        public List<ConflictingCommandsWarning> FindConflictingTimes(IOsbSpriteCommand cmd1, IOsbSpriteCommand cmd2)
         {
             List<ConflictingCommandsWarning> list = new List<ConflictingCommandsWarning>();
 
@@ -49,6 +58,7 @@ namespace OsbAnalyzer.Analysing.Elements
                     Conflict = Conflict.SameTime,
                     RelatedLine = cmd1.Line,
                     OffendingLine = cmd2.Line,
+                    WarningLevel = WarningLevel.MostLikelyNotRankable,
                 });
 
                 return list;
@@ -60,6 +70,7 @@ namespace OsbAnalyzer.Analysing.Elements
                     Conflict = Conflict.Overlapping,
                     RelatedLine = cmd1.Line,
                     OffendingLine = cmd2.Line,
+                    WarningLevel = GetWarningLevelForTimeConflict(cmd1, cmd2),
                 });
             }
 
@@ -82,11 +93,28 @@ namespace OsbAnalyzer.Analysing.Elements
                         Conflict = Conflict.IncompatibleCommands,
                         OffendingLine = cmd.Line,
                         RelatedLine = relatedLine,
+                        WarningLevel = WarningLevel.CompletelyBroken,
                     });
                 }
             }
 
             return list;
+        }
+
+        private WarningLevel GetWarningLevelForTimeConflict(IOsbSpriteCommand cmd1, IOsbSpriteCommand cmd2)
+        {
+            double overlapDuration = cmd1.EndTime - cmd2.StartTime;
+            double percentageOfFirst = overlapDuration / cmd1.Duration;
+            double percentageOfSecond;
+            if (cmd2.Duration == 0)
+                percentageOfSecond = 1;
+            else
+                percentageOfSecond = overlapDuration / cmd2.Duration;
+
+            double warningLevel = 2 * (percentageOfFirst + percentageOfSecond);
+
+            return (WarningLevel)(int)Math.Round(warningLevel);
+
         }
     }
 }

@@ -6,5 +6,6 @@ namespace Contracts.Commands
 {
     public class RotateCommand : OsbCommand<double>
     {
+        public override double DefaultValue => 0;
     }
 }

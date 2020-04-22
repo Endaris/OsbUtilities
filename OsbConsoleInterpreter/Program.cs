@@ -19,7 +19,9 @@ namespace OsbConsoleInterpreter
                 List<string> output = new List<string>();
                 analysedSb.AnalysedElements.ToList().ForEach(e => 
                 {
-                    string warnings = String.Join("\r\n", e.StoryboardWarnings.Select(w => w.ToString()));
+                    string warnings = String.Join("\r\n", e.StoryboardWarnings.Where(w => w != null)
+                                                                              .OrderByDescending(w => w.WarningLevel)
+                                                                              .Select(w => $"Warning Level {(int)w.WarningLevel}: {w.GetType().Name}: {w.ToString()}"));
                     if (!string.IsNullOrWhiteSpace(warnings))
                         output.Add(warnings);
                 }

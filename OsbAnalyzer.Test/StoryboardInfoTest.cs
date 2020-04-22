@@ -1,140 +1,39 @@
-using System;
-using Xunit;
-using OsbAnalyzer.Analysing.Elements;
-using Contracts;
-using Contracts.Enums;
+﻿using System;
 using System.Collections.Generic;
-using Contracts.Commands;
-using OsbAnalyzer.Warnings;
+using System.Drawing.Imaging;
 using System.Linq;
+using System.Text;
+using Contracts;
+using Contracts.Commands;
+using Contracts.Enums;
+using OsbAnalyzer.Analysing.Storyboard;
+using OsbAnalyzer.Contracts;
+using Xunit;
 
 namespace OsbAnalyzer.Test
 {
-    public class ConflictAnalyserTest
+    public class StoryboardInfoTest
     {
-        private ConflictAnalyser ConflictAnalyser = new ConflictAnalyser();
-
-        private OsbCommand<CommandPosition> cmd1 = new MoveCommand()
+        VisualElement visualElement = new VisualElement()
         {
-            Easing = OsbEasing.None,
-            StartTime = 17,
-            EndTime = 124,
-            Identifier = "M",
-            StartValue = new CommandPosition(15, 320),
-            EndValue = new CommandPosition(320, 240),
-            Line = 29,
-        };
-
-        private OsbCommand<CommandPosition> cmd2 = new MoveCommand()
-        {
-            Easing = OsbEasing.None,
-            StartTime = 1700,
-            EndTime = 12400,
-            Identifier = "M",
-            StartValue = new CommandPosition(15, 320),
-            EndValue = new CommandPosition(320, 240),
-            Line = 74,
-        };
-
-        private OsbCommand<CommandPosition> cmd3 = new MoveCommand()
-        {
-            Easing = OsbEasing.None,
-            StartTime = 9600,
-            EndTime = 17300,
-            Identifier = "M",
-            StartValue = new CommandPosition(15, 320),
-            EndValue = new CommandPosition(320, 240),
-            Line = 124,
-        };
-        private OsbCommand<CommandPosition> cmd4 = new MoveCommand()
-        {
-            Easing = OsbEasing.None,
-            StartTime = 9600,
-            EndTime = 17300,
-            Identifier = "M",
-            StartValue = new CommandPosition(15, 320),
-            EndValue = new CommandPosition(320, 240),
-            Line = 125,
-        };
-
-        private OsbCommand<double> cmd5 = new MoveXCommand()
-        {
-            Easing = OsbEasing.None,
-            StartTime = 10000,
-            EndTime = 20000,
-            Identifier = "MX",
-            StartValue = 320,
-            EndValue = 640,
-            Line = 128,
-        };
-
-        private OsbCommand<double> cmd6 = new MoveYCommand()
-        {
-            Easing = OsbEasing.None,
-            StartTime = 10000,
-            EndTime = 20000,
-            Identifier = "MY",
-            StartValue = 240,
-            EndValue = 480,
-            Line = 129,
-        };
-
-
-        [Fact]
-        public void FindConflictingCommandTypesTest1()
-        {
-            VisualElement visualElement = new VisualElement()
-            {
-                Commands = new List<IOsbCommand>() { cmd1, cmd2, cmd3, cmd4, cmd5, cmd6},
-            };
-            var result = ConflictAnalyser.FindConflictingCommandTypes(visualElement);
-
-            Assert.True(result.Count == 2);
-            Assert.True(result[0].Conflict == Contracts.Warnings.Conflict.IncompatibleCommands);
-            Assert.True(result[0].OffendingLine == 128 || result[0].OffendingLine == 129);
-        }
-
-        [Fact]
-        public void FindConflictingTimesTest1()
-        {
-            var result = ConflictAnalyser.FindConflictingTimes(cmd1, cmd2);
-
-            Assert.True(result.Count == 0);
-        }
-
-        [Fact]
-        public void FindConflictingTimesTest2()
-        {
-            var result = ConflictAnalyser.FindConflictingTimes(cmd2, cmd3);
-
-            Assert.True(result.Count == 1);
-            Assert.True(result[0].Conflict == Contracts.Warnings.Conflict.Overlapping);
-        }
-
-        [Fact]
-        public void FindConflictingTimesTest3()
-        {
-            var result = ConflictAnalyser.FindConflictingTimes(cmd3, cmd4);
-
-            Assert.True(result.Count == 1);
-            Assert.True(result[0].Conflict == Contracts.Warnings.Conflict.SameTime);
-        }
-
-
-
-        [Fact]
-        public void FindConflictingTimesTest4()
-        {
-            var visualElement = new VisualElement()
-            {
-                Layer = OsbLayer.Background,
-                Anchor = OsbOrigin.Centre,
-                Line = 5880,
-                InitialPosition = new CommandPosition(0, 0),
-                zIndex = 0,
-                RelativePath = @"sb\l.png",
-                Commands = new List<IOsbCommand>()
+            Layer = OsbLayer.Background,
+            Anchor = OsbOrigin.Centre,
+            Line = 5878,
+            InitialPosition = new CommandPosition(0, 0),
+            zIndex = 0,
+            RelativePath = @"sb\l.png",
+            Commands = new List<IOsbCommand>()
                 {
+                    new FadeCommand()
+                    {
+                        Identifier = "F",
+                        Easing =  OsbEasing.None,
+                        StartTime = 244823,
+                        EndTime = 250892,
+                        StartValue = 1,
+                        EndValue = 0,
+                        Line = 5879,
+                    },
                     new LoopCommand()
                     {
                         Identifier = "L",
@@ -346,13 +245,39 @@ namespace OsbAnalyzer.Test
                         Line = 5901,
                     },
                 },
-            };
+        };
 
-            var result = ConflictAnalyser.Analyse(visualElement);
+        [Fact]
+        public void ConstructTest1()
+        {
+            Storyboard storyboard = new Storyboard() { OsbElements = new List<VisualElement>() { visualElement } };
 
-            Assert.InRange(result.FirstOrDefault().WarningLevel,
-                Contracts.Warnings.WarningLevel.MostLikelyRankable,
-                Contracts.Warnings.WarningLevel.CompletelyBroken);
+            StoryboardInfo storyboardInfo = new StoryboardInfo(storyboard);
+
+            Assert.True(storyboardInfo.ActiveSpriteData.Count(d => d.Key < 50000) == 0);
+            Assert.True(storyboardInfo.ActiveSpriteData.Count(d => 270000 < d.Key && d.Key <= 270016) == 1);
+            Assert.True(storyboardInfo.VisibleSpriteData.First(d => 270000 < d.Key && d.Key <= 270016).Value == 0);
+            Assert.True(storyboardInfo.VisibleSpriteData.First(d => 247000 < d.Key && d.Key <= 247016).Value == 1);
+            Assert.True(storyboardInfo.ActiveCommandData.Count(d => d.Key < 50000) == 0);
+            Assert.True(storyboardInfo.ActiveCommandData.Count(d => 270000 < d.Key && d.Key <= 270016) == 1);
+            Assert.True(storyboardInfo.VisibleCommandData.First(d => 270000 < d.Key && d.Key <= 270016).Value == 0);
+            Assert.True(storyboardInfo.VisibleCommandData.Count(d => 247000 < d.Key && d.Key <= 247016) == 1);
+            Assert.True(storyboardInfo.ActiveCommandData.First(d => 247000 < d.Key && d.Key <= 247016).Value == 12);
+            Assert.True(storyboardInfo.VisibleCommandData.First(d => 247000 < d.Key && d.Key <= 247016).Value == 12);
+            Assert.True(storyboardInfo.VisibleCommandData.First(d => 270000 < d.Key && d.Key <= 270016).Value == 0);
+
+        }
+
+        [Fact]
+        public void InfoDrawerTest1()
+        {
+            Storyboard storyboard = new Storyboard() { OsbElements = new List<VisualElement>() { visualElement } };
+
+            StoryboardInfo storyboardInfo = new StoryboardInfo(storyboard);
+
+            StoryboardInfoDrawer drawer = new StoryboardInfoDrawer(storyboardInfo);
+            var bitmap = drawer.DrawSpriteGraph();
+            bitmap.Save("spritegraph", ImageFormat.Jpeg);
         }
     }
 }

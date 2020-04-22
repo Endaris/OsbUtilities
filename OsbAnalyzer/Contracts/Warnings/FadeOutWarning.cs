@@ -1,0 +1,17 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace OsbAnalyzer.Contracts.Warnings
+{
+    public class FadeOutWarning : StoryboardWarning
+    {
+        public double timeInvisible { get; set; }
+        public double percentageInvisible { get; set; }
+
+        public override string ToString()
+        {
+            return $"Sprite at line {OffendingLine} is invisible for {timeInvisible}ms ({percentageInvisible}%) of its active time.";
+        }
+    }
+}

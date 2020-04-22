@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using OsbAnalyzer.Warnings;
 
 namespace OsbAnalyzer.Contracts
 {
@@ -8,5 +9,6 @@ namespace OsbAnalyzer.Contracts
     {
         public virtual int OffendingLine { get; set; }
         public abstract override string ToString();
+        public Warnings.WarningLevel WarningLevel { get; set; }
     }
 }

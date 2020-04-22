@@ -25,12 +25,12 @@ namespace MapReader.Parsing
                     if (IsCompoundCommand(values[0]))
                     {
                         List<string> Lines = GetCompoundCommandLines(element, i);
-                        osbElement.Commands = osbElement.Commands.Append(ParseCompoundCommandLine(Lines, element.LineStart));
+                        osbElement.Commands = osbElement.Commands.Append(ParseCompoundCommandLine(Lines, element.LineStart, osbElement.InitialPosition));
                         i = i + Lines.Count - 1;
                     }
                     else
                     {
-                        osbElement.Commands = osbElement.Commands.Append(ParseCommandLine(element.Lines[i], element.LineStart + i));
+                        osbElement.Commands = osbElement.Commands.Append(ParseCommandLine(element.Lines[i], element.LineStart + i, osbElement.InitialPosition));
 
                     }
                 }
@@ -46,11 +46,11 @@ namespace MapReader.Parsing
         public List<string> GetCompoundCommandLines(ParsingElement element, int i)
         {
             var lines = element.Lines.GetRange(i, element.Lines.Count - i);
-            return lines.TakeWhile(l => l.TakeWhile(Char.IsWhiteSpace).Count() > lines[0].TakeWhile(Char.IsWhiteSpace).Count()
+            return lines.TakeWhile(l => l.TakeWhile(char.IsWhiteSpace).Count() > lines[0].TakeWhile(char.IsWhiteSpace).Count()
                                       || ReferenceEquals(l, lines[0])).ToList();
         }
 
-        public IOsbSpriteCommand ParseCommandLine(string line, int lineNumber)
+        public IOsbSpriteCommand ParseCommandLine(string line, int lineNumber, CommandPosition initialPosition)
         {
             var values = line.Trim().Split(',');
 
@@ -132,7 +132,8 @@ namespace MapReader.Parsing
                         var startY = double.Parse(values[5], CultureInfo.InvariantCulture);
                         var endX = values.Length > 6 ? double.Parse(values[6], CultureInfo.InvariantCulture) : startX;
                         var endY = values.Length > 7 ? double.Parse(values[7], CultureInfo.InvariantCulture) : startY;
-                        return new MoveCommand()
+
+                        var m = new MoveCommand()
                         {
                             Easing = easing,
                             Identifier = commandType,
@@ -142,12 +143,14 @@ namespace MapReader.Parsing
                             EndValue = new CommandPosition() { X = endX, Y = endY },
                             Line = lineNumber,
                         };
+                        m.SetDefaultValue(initialPosition);
+                        return m;
                     }
                 case "MX":
                     {
                         var startValue = double.Parse(values[4], CultureInfo.InvariantCulture);
                         var endValue = values.Length > 5 ? double.Parse(values[5], CultureInfo.InvariantCulture) : startValue;
-                        return new MoveXCommand()
+                        var mx = new MoveXCommand()
                         {
                             Easing = easing,
                             Identifier = commandType,
@@ -157,12 +160,14 @@ namespace MapReader.Parsing
                             EndValue = endValue,
                             Line = lineNumber,
                         };
+                        mx.SetDefaultValue(initialPosition);
+                        return mx;
                     }
                 case "MY":
                     {
                         var startValue = double.Parse(values[4], CultureInfo.InvariantCulture);
                         var endValue = values.Length > 5 ? double.Parse(values[5], CultureInfo.InvariantCulture) : startValue;
-                        return new MoveYCommand()
+                        var my = new MoveYCommand()
                         {
                             Easing = easing,
                             Identifier = commandType,
@@ -172,6 +177,8 @@ namespace MapReader.Parsing
                             EndValue = endValue,
                             Line = lineNumber,
                         };
+                        my.SetDefaultValue(initialPosition);
+                        return my;
                     }
                 case "C":
                     {
@@ -211,13 +218,13 @@ namespace MapReader.Parsing
             }
         }
 
-        private IOsbCompoundCommand ParseCompoundCommandLine(List<string> lines, int lineStart)
+        private IOsbCompoundCommand ParseCompoundCommandLine(List<string> lines, int lineStart, CommandPosition initialPosition)
         {
             IOsbCompoundCommand osbCompoundCommand = GetOsbCompoundCommand(lines.FirstOrDefault(), lineStart);
 
             for (int i = 1; i < lines.Count; i++)
             {
-                osbCompoundCommand.OsbCommands = osbCompoundCommand.OsbCommands.Append(ParseCommandLine(lines[i], lineStart + i));
+                osbCompoundCommand.OsbCommands = osbCompoundCommand.OsbCommands.Append(ParseCommandLine(lines[i], lineStart + i, initialPosition));
             }
 
             return osbCompoundCommand;
@@ -308,10 +315,9 @@ namespace MapReader.Parsing
             {
                 Anchor = origin,
                 Layer = GetLayer(layerName),
-                LineNumber = lineNumber,
+                Line = lineNumber,
                 LineInitialisation = line,
-                X = x,
-                Y = y,
+                InitialPosition = new CommandPosition(x, y),
                 RelativePath = path,
                 Commands = new List<IOsbCommand>(),
             };

@@ -6,5 +6,7 @@ namespace Contracts.Commands
 {
     public class ColorCommand : OsbCommand<CommandColor>
     {
+        private CommandColor _defaultValue = new CommandColor(255, 255, 255);
+        public override CommandColor DefaultValue => _defaultValue;
     }
 }

@@ -79,5 +79,11 @@ namespace OsbAnalyzer.Analysing.Helper
             spriteCommand.Line = bluePrint.Line;
             return spriteCommand;
         }
+
+        //public static bool IsActiveAt(VisualElement element, double time)
+        //{
+        //    var fadeTimes = GetFadeTimes(element);
+        //    return fadeTimes.Where(t => t.Key < time).Last().Value;
+        //}
     }
 }

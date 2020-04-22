@@ -6,6 +6,7 @@ namespace Contracts
 {
     public class CommandScale
     {
+        public CommandScale() { }
         public CommandScale(double x, double y)
         {
             X = x;
@@ -13,5 +14,10 @@ namespace Contracts
         }
         public double X { get; set; }
         public double Y { get; set; }
+
+        public override string ToString()
+        {
+            return $"({X},{Y})";
+        }
     }
 }

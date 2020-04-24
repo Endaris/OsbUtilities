@@ -9,6 +9,7 @@ using Contracts.Enums;
 using OsbAnalyzer.Analysing.Storyboard;
 using OsbAnalyzer.Contracts;
 using Xunit;
+using Moq;
 
 namespace OsbAnalyzer.Test
 {
@@ -269,15 +270,21 @@ namespace OsbAnalyzer.Test
         }
 
         [Fact]
+        public void ConstructTest2()
+        {
+            StoryboardInfo storyboardInfo = new StoryboardInfo(SampleStoryboards.SummerWars);
+
+            Assert.True(storyboardInfo.ActiveSpriteData.First(d => 1444 < d.Key && d.Key <= 1460).Value == 6);
+        }
+
+        [Fact]
         public void InfoDrawerTest1()
         {
-            Storyboard storyboard = new Storyboard() { OsbElements = new List<VisualElement>() { visualElement } };
-
-            StoryboardInfo storyboardInfo = new StoryboardInfo(storyboard);
+            StoryboardInfo storyboardInfo = new StoryboardInfo(SampleStoryboards.SummerWars);
 
             StoryboardInfoDrawer drawer = new StoryboardInfoDrawer(storyboardInfo);
             var bitmap = drawer.DrawSpriteGraph();
-            bitmap.Save("spritegraph", ImageFormat.Jpeg);
+            bitmap.Save("spritegraph.jpg", ImageFormat.Jpeg);
         }
     }
 }

@@ -19,7 +19,7 @@ namespace Contracts
 
         public override string ToString()
         {
-            return $"({X},{Y})";
+            return $"{X.ToString(System.Globalization.CultureInfo.InvariantCulture)},{Y.ToString(System.Globalization.CultureInfo.InvariantCulture)}";
         }
     }
 }

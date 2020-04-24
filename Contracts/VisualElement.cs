@@ -45,7 +45,7 @@ namespace Contracts
     RelativePath = @""{RelativePath}"",
     Commands = new List<IOsbCommand>()
     {{
-        {String.Join(Environment.NewLine + "    ", this.Commands.Select(c => c.TestString.Replace(';', ',')))}
+        {string.Join(Environment.NewLine + "    ", Commands.Select(c => c.TestString.Replace(';', ',')))}
     }},
 }};";
     }

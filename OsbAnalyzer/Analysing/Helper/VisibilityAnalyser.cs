@@ -9,13 +9,6 @@ namespace OsbAnalyzer.Analysing.Helper
 {
     public class VisibilityAnalyser
     {
-
-        public bool IsVisibleAt(VisualElement visualElement, double time)
-        {
-            var visibleTimes = GetVisibleTimes(visualElement.Commands);
-            return visibleTimes.Any(t => t.Item1 <= time && t.Item2 >= time);
-        }
-
         public IEnumerable<Tuple<double, double>> GetVisibleTimes(IEnumerable<IOsbCommand> commands)
         {
             SortedDictionary<double, bool> sortedFadeTimes = GetSortedFadeTimes(commands);

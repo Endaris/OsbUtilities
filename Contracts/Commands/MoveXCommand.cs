@@ -11,7 +11,7 @@ namespace Contracts.Commands
         public override double DefaultValue
         {
             get
-            {//this sucks but it still seems more practical than having to supply it through the constructor...
+            {//this is bad but it still seems more practical than having to supply it through the constructor...
                 if (_defaultValue == -79200)
                     throw new Exception(@$"Error trying to access the default value of {Identifier} command at line {Line}
                                            The defaultvalue must be set from the sprite before accessing it on the {Identifier} command");
@@ -26,5 +26,17 @@ namespace Contracts.Commands
             else
                 _defaultValue = position.X;
         }
+
+        public override string TestString =>
+             $@"new MoveXCommand()
+{{
+    Identifier = ""{Identifier}"",
+    Easing = OsbEasing.{Easing},
+    StartTime = {StartTime},
+    EndTime = {EndTime},
+    StartValue = {StartValue.ToString(System.Globalization.CultureInfo.InvariantCulture)},
+    EndValue = {EndValue.ToString(System.Globalization.CultureInfo.InvariantCulture)},
+    Line = {Line},
+}};";
     }
 }

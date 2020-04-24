@@ -16,7 +16,7 @@ namespace Contracts.Commands
         public override CommandPosition DefaultValue 
         { 
             get
-            {//this sucks but it still seems more practical than having to supply it through the constructor...
+            {//this is bad but it still seems more practical than having to supply it through the constructor...
                 if (_defaultValue == null)
                     throw new Exception(@$"Error trying to access the default value of {Identifier} command at line {Line}
                                            The defaultvalue must be set from the sprite before accessing it on the {Identifier} command");
@@ -28,5 +28,17 @@ namespace Contracts.Commands
         {
             _defaultValue = position;
         }
+
+        public override string TestString =>
+             $@"new MoveCommand()
+{{
+    Identifier = ""{Identifier}"",
+    Easing = OsbEasing.{Easing},
+    StartTime = {StartTime},
+    EndTime = {EndTime},
+    StartValue = new CommandPosition({StartValue}),
+    EndValue = new CommandPosition({EndValue}),
+    Line = {Line},
+}};";
     }
 }

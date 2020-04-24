@@ -20,7 +20,7 @@ namespace Contracts
 
         public override string ToString()
         {
-            return $"({R},{G},{B})";
+            return $"{R},{G},{B}";
         }
     }
 }

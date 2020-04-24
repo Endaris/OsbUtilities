@@ -22,6 +22,7 @@ namespace OsbAnalyzer
             return new AnalysedStoryboard()
             {
                 AnalysedElements = storyboard.OsbElements.Select(e => Analyse(e)),
+                StoryboardInfo = new StoryboardInfo(storyboard),
             };
         }
 

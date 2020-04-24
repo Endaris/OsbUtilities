@@ -36,20 +36,7 @@ namespace Contracts
         object IOsbSpriteCommand.DefaultValue => DefaultValue;
 
         public Type ValueType { get { return typeof(TValue); } }
-        public int Line { get; set; }
-
-        //this only exists so I have a slightly easier time generating objects for the test projects and I don't know how to do it better
-        public string TestString =>
-             $@"new {this.GetType().Name}()
-{{
-    Identifier = ""{Identifier}"",
-    Easing = OsbEasing.{Easing},
-    StartTime = {StartTime},
-    EndTime = {EndTime},
-    StartValue = new {StartValue.GetType().Name}{StartValue},
-    EndValue = new {EndValue.GetType().Name}{EndValue},
-    Line = {Line},
-}};";
-       
+        public int Line { get; set; }    
+        public abstract string TestString { get; }
     }
 }

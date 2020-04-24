@@ -26,5 +26,16 @@ namespace Contracts.Commands
             else
                 _defaultValue = position.Y;
         }
+        public override string TestString =>
+             $@"new MoveY()
+{{
+    Identifier = ""{Identifier}"",
+    Easing = OsbEasing.{Easing},
+    StartTime = {StartTime},
+    EndTime = {EndTime},
+    StartValue = {StartValue.ToString(System.Globalization.CultureInfo.InvariantCulture)},
+    EndValue = {EndValue.ToString(System.Globalization.CultureInfo.InvariantCulture)},
+    Line = {Line},
+}};";
     }
 }

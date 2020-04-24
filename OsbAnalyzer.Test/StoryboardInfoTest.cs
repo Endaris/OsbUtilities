@@ -9,7 +9,6 @@ using Contracts.Enums;
 using OsbAnalyzer.Analysing.Storyboard;
 using OsbAnalyzer.Contracts;
 using Xunit;
-using Moq;
 
 namespace OsbAnalyzer.Test
 {

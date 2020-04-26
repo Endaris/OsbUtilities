@@ -103,7 +103,12 @@ namespace OsbAnalyzer.Analysing.Elements
 
         private WarningLevel GetWarningLevelForTimeConflict(IOsbSpriteCommand cmd1, IOsbSpriteCommand cmd2)
         {
-            double overlapDuration = cmd1.EndTime - cmd2.StartTime;
+            double overlapDuration;
+            if (cmd2.EndTime > cmd1.EndTime)
+                overlapDuration = cmd1.EndTime - cmd2.StartTime;
+            else
+                return WarningLevel.CompletelyBroken;
+
             double percentageOfFirst = overlapDuration / cmd1.Duration;
             double percentageOfSecond;
             if (cmd2.Duration == 0)

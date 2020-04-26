@@ -29,6 +29,6 @@ namespace OsbAnalyzer.Contracts.Warnings
     {
         SameTime,
         Overlapping,
-        IncompatibleCommands //M MX, S V (?)
+        IncompatibleCommands //M MX
     }
 }

@@ -7,6 +7,10 @@
     <Copyright>Copyright © Endaris 2020</Copyright>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>bin\Release\OsbConsoleInterpreter\</OutputPath>
+  </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\Contracts\Contracts.csproj" />
     <ProjectReference Include="..\MapReader\MapReader.csproj" />

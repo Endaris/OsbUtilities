@@ -15,14 +15,16 @@ namespace OsbAnalyzer
             new ConflictAnalyser(),
             new ProlongedActivityAnalyser(),
             new FadeOutAnalyser(),
+            new IllogicalAnalyser(),
+            new RedundancyAnalyser(),
         };
 
-        public AnalysedStoryboard Analyse(Storyboard storyboard)
+        public AnalysedStoryboard Analyse(Storyboard storyboard, bool createInfo = false)
         {
             return new AnalysedStoryboard()
             {
                 AnalysedElements = storyboard.OsbElements.Select(e => Analyse(e)),
-                StoryboardInfo = new StoryboardInfo(storyboard),
+                StoryboardInfo = (createInfo) ? new StoryboardInfo(storyboard) : null,
             };
         }
 

@@ -89,6 +89,13 @@ namespace OsbAnalyzer.Analysing.Helper
                 var conflicting = list.Where(f => f.EndTime > fade.StartTime && list.IndexOf(f) < list.IndexOf(fade));
                 if (conflicting.Count() > 0)
                 {
+                    /*the fade command always assumes the value of the last concluded command
+                     * e.g. if you have 
+                     *  F,0,0,1500,0.8,0.3
+                     *  F,0,1000,,0
+                     * then the sprite will immediately change to an opacity of 0 at 1501
+                     * this is why commands that look obsolete like this need to be treated this way
+                     */
                     fade.StartTime = conflicting.OrderBy(f => f.EndTime).Last().EndTime;
                     if (fade.EndTime < fade.StartTime)
                         fade.EndTime = fade.StartTime;

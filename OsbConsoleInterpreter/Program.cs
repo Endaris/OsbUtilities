@@ -37,9 +37,12 @@ namespace OsbConsoleInterpreter
 
                 File.AppendAllLines(targetPath, output);
 
-                StoryboardInfoDrawer drawer = new StoryboardInfoDrawer(analysedSb.StoryboardInfo);
-                drawer.DrawSpriteGraph().Save(Path.Combine(path, "spritegraph.jpg"), System.Drawing.Imaging.ImageFormat.Jpeg);
-                drawer.DrawCommandGraph().Save(Path.Combine(path, "commandgraph.jpg"), System.Drawing.Imaging.ImageFormat.Jpeg);
+                if (analysedSb.StoryboardInfo != null)
+                {
+                    StoryboardInfoDrawer drawer = new StoryboardInfoDrawer(analysedSb.StoryboardInfo);
+                    drawer.DrawSpriteGraph().Save(Path.Combine(path, "spritegraph.jpg"), System.Drawing.Imaging.ImageFormat.Jpeg);
+                    drawer.DrawCommandGraph().Save(Path.Combine(path, "commandgraph.jpg"), System.Drawing.Imaging.ImageFormat.Jpeg);
+                }
             }
         }
     }

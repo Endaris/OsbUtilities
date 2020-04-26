@@ -16,7 +16,7 @@ namespace OsbConsoleInterpreter
 
                 MapReader.MapReader mapReader = new MapReader.MapReader(path);
                 var sb = mapReader.GetStoryboard();
-                var analysedSb = new OsbAnalyzer.OsbAnalyzer().Analyse(sb);
+                var analysedSb = new OsbAnalyzer.OsbAnalyzer().Analyse(sb, true);
                 List<string> output = new List<string>();
                 analysedSb.AnalysedElements.ToList().ForEach(e => 
                 {

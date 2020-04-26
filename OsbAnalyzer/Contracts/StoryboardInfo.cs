@@ -21,7 +21,7 @@ namespace OsbAnalyzer.Contracts
         /// </summary>
         private int dx;
 
-        public StoryboardInfo(Storyboard storyboard, int msResolution = 2000)
+        public StoryboardInfo(Storyboard storyboard, int msResolution = 2500)
         {
             dx = msResolution;
             PopulateData(storyboard.OsbElements);

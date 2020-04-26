@@ -11,3 +11,4 @@ You can test it by providing a path to a mapset that contains a storyboard in .o
 ```
 OsbConsoleInterpreter.exe "C:\Program Files\osu!\Songs\104621 Rhythmics & Cat Like Thief - Summer Wars"
 ```
+Note that this may take a while as a lot of data is generated and evaluated to generate the warnings and draw the graphs.

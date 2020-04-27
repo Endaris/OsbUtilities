@@ -33,7 +33,7 @@ namespace OsbConsoleInterpreter
                 }
                 );
 
-                string targetPath = Path.Combine(path, "SBEvaluation.osba");
+                string targetPath = Path.Combine(path, "SBEvaluation.txt");
 
                 if (File.Exists(targetPath))
                 {

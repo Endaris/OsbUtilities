@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Contracts;
-using OsbAnalyzer.Analysing.Elements;
-using OsbAnalyzer.Contracts;
+using OsbAnalyser.Analysing.Elements;
+using OsbAnalyser.Contracts;
 
-namespace OsbAnalyzer
+namespace OsbAnalyser
 {
-    public class OsbAnalyzer
+    public class OsbAnalyser
     {
         private List<IAnalyser> Analysers = new List<IAnalyser>()
         {
@@ -19,12 +19,11 @@ namespace OsbAnalyzer
             new RedundancyAnalyser(),
         };
 
-        public AnalysedStoryboard Analyse(Storyboard storyboard, bool createInfo = false)
+        public AnalysedStoryboard Analyse(Storyboard storyboard)
         {
             return new AnalysedStoryboard()
             {
-                AnalysedElements = storyboard.OsbElements.Select(e => Analyse(e)),
-                StoryboardInfo = (createInfo) ? new StoryboardInfo(storyboard) : null,
+                AnalysedElements = storyboard.OsbElements.Select(e => Analyse(e))
             };
         }
 

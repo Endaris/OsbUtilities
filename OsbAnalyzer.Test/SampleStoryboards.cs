@@ -5,7 +5,7 @@ using Contracts;
 using Contracts.Enums;
 using Contracts.Commands;
 
-namespace OsbAnalyzer.Test
+namespace OsbAnalyser.Test
 {
     public class SampleStoryboards
     {

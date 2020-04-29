@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using OsbAnalyzer.Warnings;
+using OsbAnalyser.Warnings;
 
-namespace OsbAnalyzer.Contracts
+namespace OsbAnalyser.Contracts
 {
     public abstract class StoryboardWarning
     {

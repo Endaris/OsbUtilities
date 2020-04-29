@@ -2,18 +2,21 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Contracts;
 using Contracts.Commands;
-using OsbAnalyzer.Analysing.Helper;
+using OsbAnalyser.Analysing.Helper;
 
-namespace OsbAnalyzer.Contracts
+namespace OsbAnalyser.Contracts
 {
     public class StoryboardInfo
     {
-        public Dictionary<double, int> ActiveSpriteData { get; private set; }
-        public Dictionary<double, int> VisibleSpriteData { get; private set; }
-        public Dictionary<double, int> ActiveCommandData { get; private set; }
-        public Dictionary<double, int> VisibleCommandData { get; private set; }
+        public Dictionary<int, int> ActiveSpriteData { get; private set; }
+        public Dictionary<int, int> VisibleSpriteData { get; private set; }
+        public Dictionary<int, int> ActiveCommandData { get; private set; }
+        public Dictionary<int, int> VisibleCommandData { get; private set; }
+
+        private readonly Storyboard Storyboard;
 
         /// <summary>
         /// Set the interval in ms for generating datapoints
@@ -21,54 +24,97 @@ namespace OsbAnalyzer.Contracts
         /// </summary>
         private int dx;
 
-        public StoryboardInfo(Storyboard storyboard, int msResolution = 2500)
+        public StoryboardInfo(Storyboard storyboard)
         {
-            dx = msResolution;
-            PopulateData(storyboard.OsbElements);
+            Storyboard = storyboard;
         }
 
-        private void PopulateData(IEnumerable<VisualElement> visualElements)
+        public Task GenerateSpriteData(int msResolution = 2000)
         {
-            if (visualElements.Count() == 0)
-                return;
+            dx = msResolution;
+            return DoStuff(Storyboard.OsbElements);
+        }
 
-            ActiveSpriteData = new Dictionary<double, int>();
-            VisibleSpriteData = new Dictionary<double, int>();
-            ActiveCommandData = new Dictionary<double, int>();
-            VisibleCommandData = new Dictionary<double, int>();
-
-            double startTime = visualElements.OrderBy(e => e.StartTime).First().StartTime;
-            double endTime = visualElements.OrderBy(e => e.EndTime).Last().EndTime;
-
-            IEnumerable<VisualElementInfo> list = visualElements.Select(e => new VisualElementInfo(e));
-
-            for (int time = (int)startTime; time < endTime; time += dx)
+        private async Task DoStuff(IEnumerable<VisualElement> visualElements)
+        {
+            await Task.Run(() =>
             {
-                int activeSprites = 0;
-                int visibleSprites = 0;
-                int activeCommands = 0;
-                int visibleCommands = 0;
+                if (visualElements.Count() == 0)
+                    return;
 
-                foreach(var element in list)
+                double startTime = visualElements.OrderBy(e => e.StartTime).First().StartTime;
+                double endTime = visualElements.OrderBy(e => e.EndTime).Last().EndTime;
+
+                int dataPointCount = (int)Math.Ceiling((endTime - startTime) / dx);
+
+                ActiveSpriteData = new Dictionary<int, int>(dataPointCount);
+                VisibleSpriteData = new Dictionary<int, int>(dataPointCount);
+                ActiveCommandData = new Dictionary<int, int>(dataPointCount);
+                VisibleCommandData = new Dictionary<int, int>(dataPointCount);
+
+                IEnumerable<VisualElementInfo> list = visualElements.Select(e => new VisualElementInfo(e));
+                HashSet<int> times = new HashSet<int>(dataPointCount);
+
+                for (int time = (int)startTime; time < endTime; time += dx)
+                    times.Add(time);
+
+                Parallel.ForEach(times, time =>
                 {
-                    if (element.IsActiveAt(time))
+                    var datapoint = GetDataPoint(list, time);
+
+                    ActiveSpriteData.Add(time, datapoint.ActiveSprites);
+                    VisibleSpriteData.Add(time, datapoint.VisibleSprites);
+                    ActiveCommandData.Add(time, datapoint.ActiveCommands);
+                    VisibleCommandData.Add(time, datapoint.VisibleCommands);
+                });
+                // order needs to be corrected after running the data accumulation in parallel
+                ActiveSpriteData = ActiveSpriteData.OrderBy(d => d.Key).ToDictionary(d => d.Key, d => d.Value);
+                VisibleSpriteData = VisibleSpriteData.OrderBy(d => d.Key).ToDictionary(d => d.Key, d => d.Value);
+                ActiveCommandData = ActiveCommandData.OrderBy(d => d.Key).ToDictionary(d => d.Key, d => d.Value);
+                VisibleCommandData = VisibleCommandData.OrderBy(d => d.Key).ToDictionary(d => d.Key, d => d.Value);
+            });           
+        }
+
+        private DataPoint GetDataPoint(IEnumerable<VisualElementInfo> list, int time)
+        {
+            DataPoint totalDataPoint = new DataPoint();
+            object o = new object();
+            Parallel.ForEach(list,
+                    () => new DataPoint(),
+                    (element, state, datapoint) =>
                     {
-                        activeSprites++;
-                        activeCommands += element.CommandCount;
-
-                        if (element.IsVisibleAt(time))
+                        if (element.IsActiveAt(time))
                         {
-                            visibleSprites++;
-                            visibleCommands += element.CommandCount;
-                        }
-                    }
-                }
+                            datapoint.ActiveSprites++;
+                            datapoint.ActiveCommands += element.CommandCount;
 
-                ActiveSpriteData.Add(time, activeSprites);
-                VisibleSpriteData.Add(time, visibleSprites);
-                ActiveCommandData.Add(time, activeCommands);
-                VisibleCommandData.Add(time, visibleCommands);
-            }
+                            if (element.IsVisibleAt(time))
+                            {
+                                datapoint.VisibleSprites++;
+                                datapoint.VisibleCommands += element.CommandCount;
+                            }
+                        }
+                        return datapoint;
+                    },
+                    (datapoint) =>
+                    {
+                        lock (o)
+                        {
+                            totalDataPoint.ActiveSprites += datapoint.ActiveSprites;
+                            totalDataPoint.VisibleSprites += datapoint.VisibleSprites;
+                            totalDataPoint.ActiveCommands += datapoint.ActiveCommands;
+                            totalDataPoint.VisibleCommands += datapoint.VisibleCommands;
+                        }
+                    });
+            return totalDataPoint;
+        }
+
+        class DataPoint
+        {
+            public int ActiveSprites { get; set; }
+            public int VisibleSprites { get; set; }
+            public int ActiveCommands { get; set; }
+            public int VisibleCommands { get; set; }
         }
 
         class VisualElementInfo
@@ -86,12 +132,12 @@ namespace OsbAnalyzer.Contracts
                 CommandCount = VisualElement.Commands.Count();
             }
 
-            public bool IsVisibleAt(double time)
+            public bool IsVisibleAt(int time)
             {
                 return VisibleTimes.Any(t => t.Item1 <= time && t.Item2 >= time);
             }
 
-            public bool IsActiveAt(double time)
+            public bool IsActiveAt(int time)
             {
                 return HasTrigger || time >= VisualElement.StartTime && time <= VisualElement.EndTime;
             }

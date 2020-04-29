@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Contracts;
-using OsbAnalyzer.Analysing.Helper;
-using OsbAnalyzer.Contracts;
-using OsbAnalyzer.Contracts.Warnings;
+using OsbAnalyser.Analysing.Helper;
+using OsbAnalyser.Contracts;
+using OsbAnalyser.Contracts.Warnings;
 
-namespace OsbAnalyzer.Analysing.Elements
+namespace OsbAnalyser.Analysing.Elements
 {
     public class FadeOutAnalyser : IAnalyser
     {

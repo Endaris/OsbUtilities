@@ -6,11 +6,11 @@ using System.Text;
 using Contracts;
 using Contracts.Commands;
 using Contracts.Enums;
-using OsbAnalyzer.Analysing.Storyboard;
-using OsbAnalyzer.Contracts;
+using OsbAnalyser.Analysing.Storyboard;
+using OsbAnalyser.Contracts;
 using Xunit;
 
-namespace OsbAnalyzer.Test
+namespace OsbAnalyser.Test
 {
     public class StoryboardInfoTest
     {

@@ -4,10 +4,10 @@ using System.Text;
 using Contracts;
 using Contracts.Commands;
 using Contracts.Enums;
-using OsbAnalyzer.Analysing.Elements;
+using OsbAnalyser.Analysing.Elements;
 using Xunit;
 
-namespace OsbAnalyzer.Test
+namespace OsbAnalyser.Test
 {
     public class RedundancyAnalyserTest
     {

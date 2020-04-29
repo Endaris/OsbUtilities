@@ -4,9 +4,9 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text;
-using OsbAnalyzer.Contracts;
+using OsbAnalyser.Contracts;
 
-namespace OsbAnalyzer.Analysing.Storyboard
+namespace OsbAnalyser.Analysing.Storyboard
 {
     public class StoryboardInfoDrawer
     {
@@ -14,11 +14,12 @@ namespace OsbAnalyzer.Analysing.Storyboard
 
         private float xMin => (float)ActiveData.Keys.Min();
         private float xMax => (float)ActiveData.Keys.Max();
-        private float yMin => ActiveData.Values.Min();
+        //graph should always start at y = 0
+        private float yMin => 0; //ActiveData.Values.Min(); 
         private float yMax => ActiveData.Values.Max();
 
-        private Dictionary<double, int> ActiveData;
-        private Dictionary<double, int> VisibleData;
+        private Dictionary<int, int> ActiveData;
+        private Dictionary<int, int> VisibleData;
 
         private Font font = new Font("Tahoma", 10);
 
@@ -124,7 +125,7 @@ namespace OsbAnalyzer.Analysing.Storyboard
             }
         }
 
-        private void DrawData(Bitmap bitmap, Dictionary<double, int> data, Color color)
+        private void DrawData(Bitmap bitmap, Dictionary<int, int> data, Color color)
         {
             using (Graphics gr = Graphics.FromImage(bitmap))
             {

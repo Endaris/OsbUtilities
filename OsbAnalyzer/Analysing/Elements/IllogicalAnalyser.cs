@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Contracts;
-using OsbAnalyzer.Analysing.Helper;
-using OsbAnalyzer.Contracts;
-using OsbAnalyzer.Warnings;
+using OsbAnalyser.Analysing.Helper;
+using OsbAnalyser.Contracts;
+using OsbAnalyser.Warnings;
 
-namespace OsbAnalyzer.Analysing.Elements
+namespace OsbAnalyser.Analysing.Elements
 {
     public class IllogicalAnalyser : IAnalyser
     {

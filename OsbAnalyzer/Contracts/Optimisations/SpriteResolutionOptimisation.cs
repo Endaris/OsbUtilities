@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace OsbAnalyzer.Contracts.Optimisations
+namespace OsbAnalyser.Contracts.Optimisations
 {
     class SpriteResolutionOptimisation
     {

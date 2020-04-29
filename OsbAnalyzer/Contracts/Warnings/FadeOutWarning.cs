@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace OsbAnalyzer.Contracts.Warnings
+namespace OsbAnalyser.Contracts.Warnings
 {
     public class FadeOutWarning : StoryboardWarning
     {

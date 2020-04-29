@@ -1,14 +1,14 @@
 using System;
 using Xunit;
-using OsbAnalyzer.Analysing.Elements;
+using OsbAnalyser.Analysing.Elements;
 using Contracts;
 using Contracts.Enums;
 using System.Collections.Generic;
 using Contracts.Commands;
-using OsbAnalyzer.Warnings;
+using OsbAnalyser.Warnings;
 using System.Linq;
 
-namespace OsbAnalyzer.Test
+namespace OsbAnalyser.Test
 {
     public class ConflictAnalyserTest
     {

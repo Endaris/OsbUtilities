@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Contracts;
-using OsbAnalyzer.Contracts.Warnings;
-using OsbAnalyzer.Analysing.Helper;
-using OsbAnalyzer.Contracts;
+using OsbAnalyser.Contracts.Warnings;
+using OsbAnalyser.Analysing.Helper;
+using OsbAnalyser.Contracts;
 
-namespace OsbAnalyzer.Analysing.Elements
+namespace OsbAnalyser.Analysing.Elements
 {
     public class ConflictAnalyser : IAnalyser
     {

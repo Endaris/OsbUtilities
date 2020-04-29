@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using OsbAnalyzer.Analysing.Storyboard;
+using OsbAnalyser.Analysing.Storyboard;
+using OsbAnalyser.Contracts;
 
 namespace OsbConsoleInterpreter
 {
@@ -16,7 +17,10 @@ namespace OsbConsoleInterpreter
 
                 MapReader.MapReader mapReader = new MapReader.MapReader(path);
                 var sb = mapReader.GetStoryboard();
-                var analysedSb = new OsbAnalyzer.OsbAnalyzer().Analyse(sb, true);
+                var storyboardInfo = new StoryboardInfo(sb);
+                var t = storyboardInfo.GenerateSpriteData();
+                var osbAnalyser = new OsbAnalyser.OsbAnalyser();
+                var analysedSb = osbAnalyser.Analyse(sb);
                 List<string> output = new List<string>();
                 analysedSb.AnalysedElements.ToList().ForEach(e => 
                 {
@@ -42,12 +46,10 @@ namespace OsbConsoleInterpreter
 
                 File.AppendAllLines(targetPath, output);
 
-                if (analysedSb.StoryboardInfo != null)
-                {
-                    StoryboardInfoDrawer drawer = new StoryboardInfoDrawer(analysedSb.StoryboardInfo);
-                    drawer.DrawSpriteGraph().Save(Path.Combine(path, "spritegraph.jpg"), System.Drawing.Imaging.ImageFormat.Jpeg);
-                    drawer.DrawCommandGraph().Save(Path.Combine(path, "commandgraph.jpg"), System.Drawing.Imaging.ImageFormat.Jpeg);
-                }
+                t.Wait();
+                StoryboardInfoDrawer drawer = new StoryboardInfoDrawer(storyboardInfo);
+                drawer.DrawSpriteGraph().Save(Path.Combine(path, "spritegraph.jpg"), System.Drawing.Imaging.ImageFormat.Jpeg);
+                drawer.DrawCommandGraph().Save(Path.Combine(path, "commandgraph.jpg"), System.Drawing.Imaging.ImageFormat.Jpeg);
             }
         }
     }

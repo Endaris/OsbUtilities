@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace OsbAnalyzer.Contracts
+namespace OsbAnalyser.Contracts
 {
     public interface IStoryboardOptimisation
     {

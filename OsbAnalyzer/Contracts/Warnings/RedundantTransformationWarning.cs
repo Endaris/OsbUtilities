@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using OsbAnalyzer.Contracts;
+using OsbAnalyser.Contracts;
 
-namespace OsbAnalyzer.Warnings
+namespace OsbAnalyser.Warnings
 {
     public class RedundantTransformationWarning : StoryboardWarning
     {

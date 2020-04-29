@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace OsbAnalyzer.Warnings
+namespace OsbAnalyser.Warnings
 {
     class OffscreenWarning
     {

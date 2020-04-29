@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Contracts;
-using OsbAnalyzer.Contracts;
-using OsbAnalyzer.Warnings;
+using OsbAnalyser.Contracts;
+using OsbAnalyser.Warnings;
 
-namespace OsbAnalyzer.Analysing.Elements
+namespace OsbAnalyser.Analysing.Elements
 {
     public class RedundancyAnalyser : IAnalyser
     {

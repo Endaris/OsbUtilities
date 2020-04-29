@@ -5,7 +5,7 @@ using System.Text;
 using Contracts;
 using Contracts.Commands;
 
-namespace OsbAnalyzer.Analysing.Helper
+namespace OsbAnalyser.Analysing.Helper
 {
     public static class AnalysingHelper
     {

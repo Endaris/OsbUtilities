@@ -5,10 +5,10 @@ using Xunit;
 using System.Linq;
 using Contracts;
 using Contracts.Commands;
-using OsbAnalyzer.Analysing.Helper;
+using OsbAnalyser.Analysing.Helper;
 using Contracts.Enums;
 
-namespace OsbAnalyzer.Test
+namespace OsbAnalyser.Test
 {
     public class AnalyzingHelperTest
     {

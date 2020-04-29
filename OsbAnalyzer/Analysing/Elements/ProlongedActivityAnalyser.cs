@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Contracts;
-using OsbAnalyzer.Contracts;
-using OsbAnalyzer.Analysing.Helper;
-using OsbAnalyzer.Warnings;
-using OsbAnalyzer.Contracts.Warnings;
+using OsbAnalyser.Contracts;
+using OsbAnalyser.Analysing.Helper;
+using OsbAnalyser.Warnings;
+using OsbAnalyser.Contracts.Warnings;
 using Contracts.Commands;
 
-namespace OsbAnalyzer.Analysing.Elements
+namespace OsbAnalyser.Analysing.Elements
 {
     public class ProlongedActivityAnalyser : IAnalyser
     {

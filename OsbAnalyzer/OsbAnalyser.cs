@@ -5,6 +5,7 @@ using System.Text;
 using Contracts;
 using OsbAnalyser.Analysing.Elements;
 using OsbAnalyser.Contracts;
+using OsbAnalyzer.Contracts.Warnings;
 
 namespace OsbAnalyser
 {
@@ -39,7 +40,19 @@ namespace OsbAnalyser
         private List<StoryboardWarning> GenerateWarnings(VisualElement visualElement)
         {
             List<StoryboardWarning> storyboardWarnings = new List<StoryboardWarning>();
-            Analysers.ForEach(a => storyboardWarnings.AddRange(a.Analyse(visualElement)));
+            if (visualElement.Commands?.Count() > 0)
+            {
+                Analysers.ForEach(a => storyboardWarnings.AddRange(a.Analyse(visualElement)));
+            }    
+            else
+            {
+                storyboardWarnings.Add(new ObsoleteSpriteWarning()
+                {
+                    OffendingLine = visualElement.Line,
+                    WarningLevel = Contracts.Warnings.WarningLevel.CompletelyBroken
+                });
+            }
+                
             return storyboardWarnings;
         }
     }

@@ -37,7 +37,7 @@ namespace OsbConsoleInterpreter
                 }
                 );
 
-                string targetPath = Path.Combine(path, "SBEvaluation.txt");
+                string targetPath = Path.Combine(path, "StoryboardWarnings.txt");
 
                 if (File.Exists(targetPath))
                 {

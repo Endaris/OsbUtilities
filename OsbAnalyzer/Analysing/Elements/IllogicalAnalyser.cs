@@ -30,7 +30,7 @@ namespace OsbAnalyser.Analysing.Elements
                     illogicalCommandWarnings.Add(new IllogicalCommandWarning()
                     {
                         OffendingLine = cmd.Line,
-                        WarningLevel = Contracts.Warnings.WarningLevel.CompletelyBroken,
+                        WarningLevel = Contracts.Warnings.WarningLevel.Critical,
                     });
                 }
             }

@@ -58,7 +58,7 @@ namespace OsbAnalyser.Analysing.Elements
                     Conflict = Conflict.SameTime,
                     RelatedLine = cmd1.Line,
                     OffendingLine = cmd2.Line,
-                    WarningLevel = WarningLevel.MostLikelyNotRankable,
+                    WarningLevel = WarningLevel.High,
                 });
 
                 return list;
@@ -93,7 +93,7 @@ namespace OsbAnalyser.Analysing.Elements
                         Conflict = Conflict.IncompatibleCommands,
                         OffendingLine = cmd.Line,
                         RelatedLine = relatedLine,
-                        WarningLevel = WarningLevel.CompletelyBroken,
+                        WarningLevel = WarningLevel.Critical,
                     });
                 }
             }
@@ -107,7 +107,7 @@ namespace OsbAnalyser.Analysing.Elements
             if (cmd2.EndTime > cmd1.EndTime)
                 overlapDuration = cmd1.EndTime - cmd2.StartTime;
             else
-                return WarningLevel.CompletelyBroken;
+                return WarningLevel.Critical;
 
             double percentageOfFirst = overlapDuration / cmd1.Duration;
             double percentageOfSecond;

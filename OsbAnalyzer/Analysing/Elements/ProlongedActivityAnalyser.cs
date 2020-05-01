@@ -64,21 +64,21 @@ namespace OsbAnalyser.Analysing.Elements
         {
             WarningLevel warningLevel;
             if (timeProlonged == 0)
-                warningLevel = WarningLevel.MostLikelyRankable;
+                warningLevel = WarningLevel.Insignificant;
             else if (timeProlonged < 5000)
-                warningLevel = WarningLevel.LikelyRankable;
+                warningLevel = WarningLevel.Low;
             else if (timeProlonged < 10000)
-                warningLevel = WarningLevel.MaybeRankable;
+                warningLevel = WarningLevel.Medium;
             else if (timeProlonged < 15000)
-                warningLevel = WarningLevel.LikelyNotRankable;
+                warningLevel = WarningLevel.MediumPlus;
             else if (timeProlonged < 20000)
-                warningLevel = WarningLevel.MostLikelyNotRankable;
+                warningLevel = WarningLevel.High;
             else
-                warningLevel = WarningLevel.CompletelyBroken;
+                warningLevel = WarningLevel.Critical;
 
             double percentage = timeProlonged / visualElement.Duration;
 
-            while (warningLevel != WarningLevel.CompletelyBroken && percentage > 0.2)
+            while (warningLevel != WarningLevel.Critical && percentage > 0.2)
             {
                 warningLevel = warningLevel + 1;
                 percentage -= 0.2;

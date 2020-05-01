@@ -351,8 +351,8 @@ namespace OsbAnalyser.Test
             var result = ConflictAnalyser.Analyse(visualElement);
 
             Assert.InRange(result.FirstOrDefault().WarningLevel,
-                Contracts.Warnings.WarningLevel.MostLikelyRankable,
-                Contracts.Warnings.WarningLevel.CompletelyBroken);
+                Contracts.Warnings.WarningLevel.Insignificant,
+                Contracts.Warnings.WarningLevel.Critical);
         }
     }
 }

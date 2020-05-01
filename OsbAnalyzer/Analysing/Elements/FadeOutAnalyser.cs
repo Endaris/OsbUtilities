@@ -60,15 +60,15 @@ namespace OsbAnalyser.Analysing.Elements
             double percentageInvisible = timeInvisible / timeActive;
 
             if (percentageInvisible < 0.5)
-                return WarningLevel.LikelyRankable;
+                return WarningLevel.Low;
             else if (percentageInvisible < 0.6)
-                return WarningLevel.MaybeRankable;
+                return WarningLevel.Medium;
             else if (percentageInvisible < 0.7)
-                return WarningLevel.LikelyNotRankable;
+                return WarningLevel.MediumPlus;
             else if (percentageInvisible < 0.8)
-                return WarningLevel.MostLikelyNotRankable;
+                return WarningLevel.High;
             else
-                return WarningLevel.CompletelyBroken;
+                return WarningLevel.Critical;
         }
     }
 }

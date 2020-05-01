@@ -56,7 +56,7 @@ namespace OsbAnalyser.Analysing.Elements
                         OffendingLine = cmd2.Line,
                         RelatedLine = cmd1.Line,
                         Identifier = cmdGroup.Key,
-                        WarningLevel = Contracts.Warnings.WarningLevel.MaybeRankable
+                        WarningLevel = Contracts.Warnings.WarningLevel.Medium
                     });
                 }
             }

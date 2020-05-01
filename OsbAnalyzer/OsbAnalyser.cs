@@ -49,7 +49,7 @@ namespace OsbAnalyser
                 storyboardWarnings.Add(new ObsoleteSpriteWarning()
                 {
                     OffendingLine = visualElement.Line,
-                    WarningLevel = Contracts.Warnings.WarningLevel.CompletelyBroken
+                    WarningLevel = Contracts.Warnings.WarningLevel.Critical
                 });
             }
                 

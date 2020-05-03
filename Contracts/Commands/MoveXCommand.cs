@@ -30,7 +30,6 @@ namespace Contracts.Commands
         public override string TestString =>
              $@"new MoveXCommand()
 {{
-    Identifier = ""{Identifier}"",
     Easing = OsbEasing.{Easing},
     StartTime = {StartTime},
     EndTime = {EndTime},
@@ -38,5 +37,7 @@ namespace Contracts.Commands
     EndValue = {EndValue.ToString(System.Globalization.CultureInfo.InvariantCulture)},
     Line = {Line},
 }};";
+
+        public override string Identifier => "MX";
     }
 }

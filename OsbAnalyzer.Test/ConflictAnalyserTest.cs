@@ -19,7 +19,6 @@ namespace OsbAnalyser.Test
             Easing = OsbEasing.None,
             StartTime = 17,
             EndTime = 124,
-            Identifier = "M",
             StartValue = new CommandPosition(15, 320),
             EndValue = new CommandPosition(320, 240),
             Line = 29,
@@ -30,7 +29,6 @@ namespace OsbAnalyser.Test
             Easing = OsbEasing.None,
             StartTime = 1700,
             EndTime = 12400,
-            Identifier = "M",
             StartValue = new CommandPosition(15, 320),
             EndValue = new CommandPosition(320, 240),
             Line = 74,
@@ -41,7 +39,6 @@ namespace OsbAnalyser.Test
             Easing = OsbEasing.None,
             StartTime = 9600,
             EndTime = 17300,
-            Identifier = "M",
             StartValue = new CommandPosition(15, 320),
             EndValue = new CommandPosition(320, 240),
             Line = 124,
@@ -51,7 +48,6 @@ namespace OsbAnalyser.Test
             Easing = OsbEasing.None,
             StartTime = 9600,
             EndTime = 17300,
-            Identifier = "M",
             StartValue = new CommandPosition(15, 320),
             EndValue = new CommandPosition(320, 240),
             Line = 125,
@@ -62,7 +58,6 @@ namespace OsbAnalyser.Test
             Easing = OsbEasing.None,
             StartTime = 10000,
             EndTime = 20000,
-            Identifier = "MX",
             StartValue = 320,
             EndValue = 640,
             Line = 128,
@@ -73,7 +68,6 @@ namespace OsbAnalyser.Test
             Easing = OsbEasing.None,
             StartTime = 10000,
             EndTime = 20000,
-            Identifier = "MY",
             StartValue = 240,
             EndValue = 480,
             Line = 129,
@@ -85,7 +79,7 @@ namespace OsbAnalyser.Test
         {
             VisualElement visualElement = new VisualElement()
             {
-                Commands = new List<IOsbCommand>() { cmd1, cmd2, cmd3, cmd4, cmd5, cmd6},
+                Commands = new List<IOsbCommand>() { cmd1, cmd2, cmd3, cmd4, cmd5, cmd6 },
             };
             var result = ConflictAnalyser.FindConflictingCommandTypes(visualElement);
 
@@ -99,7 +93,7 @@ namespace OsbAnalyser.Test
         {
             var result = ConflictAnalyser.FindConflictingTimes(cmd1, cmd2);
 
-            Assert.True(result.Count == 0);
+            Assert.True(result == null);
         }
 
         [Fact]
@@ -107,8 +101,8 @@ namespace OsbAnalyser.Test
         {
             var result = ConflictAnalyser.FindConflictingTimes(cmd2, cmd3);
 
-            Assert.True(result.Count == 1);
-            Assert.True(result[0].Conflict == Contracts.Warnings.Conflict.Overlapping);
+            Assert.True(result != null);
+            Assert.True(result.Conflict == Contracts.Warnings.Conflict.Overlapping);
         }
 
         [Fact]
@@ -116,8 +110,8 @@ namespace OsbAnalyser.Test
         {
             var result = ConflictAnalyser.FindConflictingTimes(cmd3, cmd4);
 
-            Assert.True(result.Count == 1);
-            Assert.True(result[0].Conflict == Contracts.Warnings.Conflict.SameTime);
+            Assert.True(result != null);
+            Assert.True(result.Conflict == Contracts.Warnings.Conflict.SameTime);
         }
 
 
@@ -137,16 +131,14 @@ namespace OsbAnalyser.Test
                 {
                     new LoopCommand()
                     {
-                        Identifier = "L",
-                        StartTime = 283852,
+                                                StartTime = 283852,
                         Line = 5880,
                         LoopCount = 2,
                         OsbCommands = new List<IOsbSpriteCommand>()
                         {
                             new MoveYCommand()
                             {
-                                Identifier = "MY",
-                                Easing = OsbEasing.None,
+                                                                Easing = OsbEasing.None,
                                 StartTime = 0,
                                 EndTime = 17594,
                                 StartValue = 188,
@@ -155,8 +147,7 @@ namespace OsbAnalyser.Test
                             },
                                 new MoveYCommand()
                             {
-                                Identifier = "MY",
-                                Easing = OsbEasing.None,
+                                                                Easing = OsbEasing.None,
                                 StartTime = 17594,
                                 EndTime = 36654,
                                 StartValue = 500,
@@ -167,16 +158,14 @@ namespace OsbAnalyser.Test
                     },
                     new LoopCommand()
                     {
-                        Identifier = "L",
-                        StartTime = 283852,
+                                                StartTime = 283852,
                         Line = 5880,
                         LoopCount = 2,
                         OsbCommands = new List<IOsbSpriteCommand>()
                         {
                             new MoveXCommand()
                             {
-                                Identifier = "MX",
-                                Easing = OsbEasing.Out,
+                                                                Easing = OsbEasing.Out,
                                 StartTime = 0,
                                 EndTime = 7675,
                                 StartValue = 159,
@@ -185,8 +174,7 @@ namespace OsbAnalyser.Test
                             },
                                 new MoveXCommand()
                             {
-                                Identifier = "MX",
-                                Easing = OsbEasing.In,
+                                                                Easing = OsbEasing.In,
                                 StartTime = 7675,
                                 EndTime = 15351,
                                 StartValue = 109,
@@ -195,8 +183,7 @@ namespace OsbAnalyser.Test
                             },
                                 new MoveXCommand()
                             {
-                                Identifier = "MX",
-                                Easing = OsbEasing.Out,
+                                                                Easing = OsbEasing.Out,
                                 StartTime = 15351,
                                 EndTime = 23027,
                                 StartValue = 159,
@@ -205,8 +192,7 @@ namespace OsbAnalyser.Test
                             },
                                 new MoveXCommand()
                             {
-                                Identifier = "MX",
-                                Easing = OsbEasing.In,
+                                                                Easing = OsbEasing.In,
                                 StartTime = 23027,
                                 EndTime = 30702,
                                 StartValue = 209,
@@ -217,16 +203,14 @@ namespace OsbAnalyser.Test
                     },
                     new LoopCommand()
                     {
-                        Identifier = "L",
-                        StartTime = 283943,
+                                                StartTime = 283943,
                         Line = 5880,
                         LoopCount = 5,
                         OsbCommands = new List<IOsbSpriteCommand>()
                         {
                             new FadeCommand()
                             {
-                                Identifier = "F",
-                                Easing = OsbEasing.None,
+                                                                Easing = OsbEasing.None,
                                 StartTime = 0,
                                 EndTime = 4357,
                                 StartValue = 0.15,
@@ -235,8 +219,7 @@ namespace OsbAnalyser.Test
                             },
                                 new ScaleCommand()
                             {
-                                Identifier = "S",
-                                Easing = OsbEasing.None,
+                                                                Easing = OsbEasing.None,
                                 StartTime = 0,
                                 EndTime = 4357,
                                 StartValue = 0.02045512,
@@ -245,8 +228,7 @@ namespace OsbAnalyser.Test
                             },
                                 new FadeCommand()
                             {
-                                Identifier = "F",
-                                Easing = OsbEasing.None,
+                                                                Easing = OsbEasing.None,
                                 StartTime = 4357,
                                 EndTime = 8715,
                                 StartValue = 0.5,
@@ -255,8 +237,7 @@ namespace OsbAnalyser.Test
                             },
                                 new ScaleCommand()
                             {
-                                Identifier = "S",
-                                Easing = OsbEasing.None,
+                                                                Easing = OsbEasing.None,
                                 StartTime = 4357,
                                 EndTime = 8715,
                                 StartValue = 0.02659166,
@@ -267,8 +248,7 @@ namespace OsbAnalyser.Test
                     },
                     new ParameterCommand()
                     {
-                        Identifier = "P",
-                        Easing = OsbEasing.None,
+                                                Easing = OsbEasing.None,
                         StartTime = 280095,
                         EndTime = 337488,
                         StartValue =  ParameterType.AdditiveBlending,
@@ -277,8 +257,7 @@ namespace OsbAnalyser.Test
                     },
                     new FadeCommand()
                     {
-                        Identifier = "F",
-                        Easing = OsbEasing.In,
+                                                Easing = OsbEasing.In,
                         StartTime = 280277,
                         EndTime = 283943,
                         StartValue = 0,
@@ -287,8 +266,7 @@ namespace OsbAnalyser.Test
                     },
                     new ColorCommand()
                     {
-                        Identifier = "C",
-                        Easing = OsbEasing.In,
+                                                Easing = OsbEasing.In,
                         StartTime = 283943,
                         EndTime = 287608,
                         StartValue = new CommandColor(0,0,0),
@@ -297,8 +275,7 @@ namespace OsbAnalyser.Test
                     },
                     new ColorCommand()
                     {
-                        Identifier = "C",
-                        Easing = OsbEasing.None,
+                                                Easing = OsbEasing.None,
                         StartTime = 287608,
                         EndTime = 312735,
                         StartValue = new CommandColor(87,87,43),
@@ -307,8 +284,7 @@ namespace OsbAnalyser.Test
                     },
                     new ColorCommand()
                     {
-                        Identifier = "C",
-                        Easing = OsbEasing.Out,
+                                                Easing = OsbEasing.Out,
                         StartTime = 312735,
                         EndTime = 327397,
                         StartValue = new CommandColor(108,65,32),
@@ -317,8 +293,7 @@ namespace OsbAnalyser.Test
                     },
                     new FadeCommand()
                     {
-                        Identifier = "F",
-                        Easing = OsbEasing.None,
+                                                Easing = OsbEasing.None,
                         StartTime = 327488,
                         EndTime = 327488,
                         StartValue = 0,
@@ -327,8 +302,7 @@ namespace OsbAnalyser.Test
                     },
                     new ScaleCommand()
                     {
-                        Identifier = "S",
-                        Easing = OsbEasing.None,
+                                                Easing = OsbEasing.None,
                         StartTime = 327488,
                         EndTime = 327488,
                         StartValue = 0,
@@ -337,8 +311,7 @@ namespace OsbAnalyser.Test
                     },
                     new ColorCommand()
                     {
-                        Identifier = "C",
-                        Easing = OsbEasing.None,
+                                                Easing = OsbEasing.None,
                         StartTime = 327488,
                         EndTime = 327488,
                         StartValue = new CommandColor(0,0,0),

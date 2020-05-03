@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Text;
 using Contracts.Enums;
 
-namespace Contracts
+namespace Contracts.Commands
 {
     public abstract class OsbCommand<TValue> : IOsbSpriteCommand<TValue>
     {
-        public string Identifier { get; set; }
+        public abstract string Identifier { get; }
         public OsbEasing Easing { get; set; }
         public double StartTime { get; set; }
         public double EndTime { get; set; }

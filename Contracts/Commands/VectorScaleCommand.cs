@@ -10,7 +10,6 @@ namespace Contracts.Commands
         public override string TestString =>
              $@"new VectorScaleCommand()
 {{
-    Identifier = ""{Identifier}"",
     Easing = OsbEasing.{Easing},
     StartTime = {StartTime},
     EndTime = {EndTime},
@@ -18,5 +17,7 @@ namespace Contracts.Commands
     EndValue = new CommandScale({EndValue}),
     Line = {Line},
 }};";
+
+        public override string Identifier => "V";
     }
 }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Contracts
+namespace Contracts.Commands
 {
     public interface IOsbCompoundCommand : IOsbCommand
     {

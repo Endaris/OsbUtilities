@@ -31,7 +31,7 @@ namespace OsbAnalyser.Analysing.Elements
                 return new List<StoryboardWarning>() { warning };
         }
 
-        public StoryboardWarning FindExcessiveFadeOutTimes(VisualElement visualElement)
+        public FadeOutWarning FindExcessiveFadeOutTimes(VisualElement visualElement)
         {
             var visibleTimes = VisibilityAnalyser.GetVisibleTimes(AnalysingHelper.ResolveTriggers(AnalysingHelper.ResolveLoops(visualElement.Commands)));
 

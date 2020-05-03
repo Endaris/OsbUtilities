@@ -11,7 +11,6 @@ namespace Contracts.Commands
         public override string TestString =>
              $@"new ParameterCommand()
 {{
-    Identifier = ""{Identifier}"",
     Easing = OsbEasing.{Easing},
     StartTime = {StartTime},
     EndTime = {EndTime},
@@ -19,5 +18,7 @@ namespace Contracts.Commands
     EndValue = ParameterType.{EndValue},
     Line = {Line},
 }};";
+
+        public override string Identifier => "P";
     }
 }

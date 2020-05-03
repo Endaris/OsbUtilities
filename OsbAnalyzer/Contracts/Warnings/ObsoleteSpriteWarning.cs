@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using OsbAnalyser.Contracts;
 
-namespace OsbAnalyzer.Contracts.Warnings
+namespace OsbAnalyser.Contracts.Warnings
 {
     public class ObsoleteSpriteWarning : StoryboardWarning
     {

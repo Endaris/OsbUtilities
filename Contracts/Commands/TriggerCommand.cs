@@ -11,7 +11,7 @@ namespace Contracts.Commands
         public double StartTime { get; set; }
         public double EndTime { get; set; }
         public double Duration => EndTime - StartTime;
-        public string Identifier { get; set; }
+        public string Identifier => "T";
         public int Line { get; set; }
         public int TriggerGroup { get; set; }
         public string TriggerName { get; set; }

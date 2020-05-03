@@ -6,11 +6,6 @@ namespace Contracts.Commands
 {
     public class MoveCommand : OsbCommand<CommandPosition>
     {
-        public MoveCommand()
-        {
-            Identifier = "M";
-        }
-
         private CommandPosition _defaultValue;
 
         public override CommandPosition DefaultValue 
@@ -32,7 +27,6 @@ namespace Contracts.Commands
         public override string TestString =>
              $@"new MoveCommand()
 {{
-    Identifier = ""{Identifier}"",
     Easing = OsbEasing.{Easing},
     StartTime = {StartTime},
     EndTime = {EndTime},
@@ -40,5 +34,7 @@ namespace Contracts.Commands
     EndValue = new CommandPosition({EndValue}),
     Line = {Line},
 }};";
+
+        public override string Identifier => "M";
     }
 }

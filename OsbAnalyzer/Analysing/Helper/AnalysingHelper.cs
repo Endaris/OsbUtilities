@@ -71,7 +71,6 @@ namespace OsbAnalyser.Analysing.Helper
         {
             var type = bluePrint.GetType();
             IOsbSpriteCommand spriteCommand = (IOsbSpriteCommand)Activator.CreateInstance(type);
-            spriteCommand.Identifier = bluePrint.Identifier;
             spriteCommand.StartTime = bluePrint.StartTime;
             spriteCommand.EndTime = bluePrint.EndTime;
             spriteCommand.StartValue = bluePrint.StartValue;

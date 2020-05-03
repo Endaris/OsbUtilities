@@ -11,7 +11,6 @@ namespace Contracts.Commands
         public override string TestString =>
              $@"new ColorCommand()
 {{
-    Identifier = ""{Identifier}"",
     Easing = OsbEasing.{Easing},
     StartTime = {StartTime},
     EndTime = {EndTime},
@@ -19,5 +18,6 @@ namespace Contracts.Commands
     EndValue = new CommandColor({EndValue}),
     Line = {Line},
 }};";
+        public override string Identifier => "C";
     }
 }

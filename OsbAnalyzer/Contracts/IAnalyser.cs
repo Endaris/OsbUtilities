@@ -5,7 +5,7 @@ using Contracts;
 
 namespace OsbAnalyser.Contracts
 {
-    interface IAnalyser
+    public interface IAnalyser
     {
         List<StoryboardWarning> Analyse(VisualElement visualElement);
     }

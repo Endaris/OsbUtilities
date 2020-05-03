@@ -71,7 +71,6 @@ namespace MapReader.Parsing
                         return new FadeCommand()
                         {
                             Easing = easing,
-                            Identifier = commandType,
                             StartTime = startTime,
                             EndTime = endTime,
                             StartValue = startValue,
@@ -86,7 +85,6 @@ namespace MapReader.Parsing
                         return new ScaleCommand()
                         {
                             Easing = easing,
-                            Identifier = commandType,
                             StartTime = startTime,
                             EndTime = endTime,
                             StartValue = startValue,
@@ -103,7 +101,6 @@ namespace MapReader.Parsing
                         return new VectorScaleCommand()
                         {
                             Easing = easing,
-                            Identifier = commandType,
                             StartTime = startTime,
                             EndTime = endTime,
                             StartValue = new CommandScale() { X = startX, Y = startY },
@@ -118,7 +115,6 @@ namespace MapReader.Parsing
                         return new RotateCommand()
                         {
                             Easing = easing,
-                            Identifier = commandType,
                             StartTime = startTime,
                             EndTime = endTime,
                             StartValue = startValue,
@@ -136,7 +132,6 @@ namespace MapReader.Parsing
                         var m = new MoveCommand()
                         {
                             Easing = easing,
-                            Identifier = commandType,
                             StartTime = startTime,
                             EndTime = endTime,
                             StartValue = new CommandPosition() { X = startX, Y = startY },
@@ -153,7 +148,6 @@ namespace MapReader.Parsing
                         var mx = new MoveXCommand()
                         {
                             Easing = easing,
-                            Identifier = commandType,
                             StartTime = startTime,
                             EndTime = endTime,
                             StartValue = startValue,
@@ -170,7 +164,6 @@ namespace MapReader.Parsing
                         var my = new MoveYCommand()
                         {
                             Easing = easing,
-                            Identifier = commandType,
                             StartTime = startTime,
                             EndTime = endTime,
                             StartValue = startValue,
@@ -191,7 +184,6 @@ namespace MapReader.Parsing
                         return new ColorCommand()
                         {
                             Easing = easing,
-                            Identifier = commandType,
                             StartTime = startTime,
                             EndTime = endTime,
                             StartValue = new CommandColor() { R = startR, G = startG, B = startB },
@@ -205,7 +197,6 @@ namespace MapReader.Parsing
                         return new ParameterCommand()
                         {
                             Easing = easing,
-                            Identifier = commandType,
                             StartTime = startTime,
                             EndTime = endTime,
                             StartValue = type,
@@ -250,7 +241,6 @@ namespace MapReader.Parsing
                             StartTime = startTime,
                             EndTime = endTime,
                             Line = lineStart,
-                            Identifier = values[0],
                             TriggerName = triggerName,
                             TriggerGroup = groupNumber,
                             OsbCommands = new List<IOsbSpriteCommand>(),
@@ -264,7 +254,6 @@ namespace MapReader.Parsing
                         {
                             StartTime = startTime,
                             Line = lineStart,
-                            Identifier = values[0],
                             LoopCount = loopCount,
                             OsbCommands = new List<IOsbSpriteCommand>(),
                         };

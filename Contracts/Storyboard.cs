@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Contracts.Resources;
 
 namespace Contracts
 {
@@ -10,6 +11,7 @@ namespace Contracts
         public string FilePath { get; set; }
         public string OsbVersion { get; set; } = "0";
         public IEnumerable<VisualElement> OsbElements { get; set; } = new List<VisualElement>();
+        public IDictionary<string, IResource> Resources { get; set; } = new Dictionary<string, IResource>();
 
         public string TestString => $@"new {this.GetType().Name}()
 {{

@@ -5,44 +5,45 @@ using System.Text;
 using Contracts;
 using OsbAnalyser.Analysing.Elements;
 using OsbAnalyser.Contracts;
-using OsbAnalyzer.Contracts.Warnings;
+using OsbAnalyser.Contracts.Warnings;
 
 namespace OsbAnalyser
 {
-    public class OsbAnalyser
+    public class StoryboardAnalyser
     {
-        private List<IAnalyser> Analysers = new List<IAnalyser>()
-        {
-            new ConflictAnalyser(),
-            new ProlongedActivityAnalyser(),
-            new FadeOutAnalyser(),
-            new IllogicalAnalyser(),
-            new RedundancyAnalyser(),
-        };
-
         public AnalysedStoryboard Analyse(Storyboard storyboard)
         {
+            List<IAnalyser> Analysers = new List<IAnalyser>()
+            {
+                new ConflictAnalyser(),
+                new ProlongedActivityAnalyser(),
+                new FadeOutAnalyser(),
+                new IllogicalAnalyser(),
+                new RedundancyAnalyser(),
+                //new OffscreenAnalyser(storyboard.Resources),
+            };
+
             return new AnalysedStoryboard()
             {
-                AnalysedElements = storyboard.OsbElements.Select(e => Analyse(e))
+                AnalysedElements = storyboard.OsbElements.Select(e => Analyse(e, Analysers))
             };
         }
 
-        public AnalysedElement Analyse(VisualElement visualElement)
+        public AnalysedElement Analyse(VisualElement visualElement, List<IAnalyser> analysers)
         {
             return new AnalysedElement()
             {
                 VisualElement = visualElement,
-                StoryboardWarnings = GenerateWarnings(visualElement),
+                StoryboardWarnings = GenerateWarnings(visualElement, analysers),
             };
         }
 
-        private List<StoryboardWarning> GenerateWarnings(VisualElement visualElement)
+        private List<StoryboardWarning> GenerateWarnings(VisualElement visualElement, List<IAnalyser> analysers)
         {
             List<StoryboardWarning> storyboardWarnings = new List<StoryboardWarning>();
             if (visualElement.Commands?.Count() > 0)
             {
-                Analysers.ForEach(a => storyboardWarnings.AddRange(a.Analyse(visualElement)));
+                analysers.ForEach(a => storyboardWarnings.AddRange(a.Analyse(visualElement)));
             }    
             else
             {

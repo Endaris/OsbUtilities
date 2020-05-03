@@ -6,6 +6,7 @@ using Contracts;
 using OsbAnalyser.Contracts.Warnings;
 using OsbAnalyser.Analysing.Helper;
 using OsbAnalyser.Contracts;
+using Contracts.Commands;
 
 namespace OsbAnalyser.Analysing.Elements
 {
@@ -26,7 +27,6 @@ namespace OsbAnalyser.Analysing.Elements
             var spriteCommandGroups = commands.Where(c => c is IOsbSpriteCommand)
                                               .Select(c => (IOsbSpriteCommand)c)
                                               .GroupBy(c => c.Identifier);
-            //var spriteCommandGroup = commands.Where(c => c is IOsbSpriteCommand).GroupBy(c => c.Identifier);
 
             foreach (var group in spriteCommandGroups)
             {
@@ -34,7 +34,9 @@ namespace OsbAnalyser.Analysing.Elements
                 {
                     for (int j = i + 1; j < group.Count(); j++)
                     {
-                        conflictingCommandsWarnings.AddRange(FindConflictingTimes(group.ElementAt(i), group.ElementAt(j)));
+                        var warning = FindConflictingTimes(group.ElementAt(i), group.ElementAt(j));
+                        if (warning != null)
+                            conflictingCommandsWarnings.Add(warning);
                     }
                 }
             }
@@ -44,37 +46,34 @@ namespace OsbAnalyser.Analysing.Elements
             return conflictingCommandsWarnings;
         }
 
-        public List<ConflictingCommandsWarning> FindConflictingTimes(IOsbSpriteCommand cmd1, IOsbSpriteCommand cmd2)
+        public ConflictingCommandsWarning FindConflictingTimes(IOsbSpriteCommand cmd1, IOsbSpriteCommand cmd2)
         {
-            List<ConflictingCommandsWarning> list = new List<ConflictingCommandsWarning>();
-
             if (cmd1.Identifier != cmd2.Identifier)
-                return list; //you need to put in actually comparable commands, dummy
+                return null; //you need to put in actually comparable commands, dummy
 
             if (cmd1.StartTime == cmd2.StartTime && cmd1.EndTime == cmd2.EndTime)
             {
-                list.Add(new ConflictingCommandsWarning()
+                 return new ConflictingCommandsWarning()
                 {
                     Conflict = Conflict.SameTime,
                     RelatedLine = cmd1.Line,
                     OffendingLine = cmd2.Line,
                     WarningLevel = WarningLevel.High,
-                });
+                };
 
-                return list;
             }
             else if (cmd2.StartTime > cmd1.StartTime && cmd2.StartTime < cmd1.EndTime)
             {
-                list.Add(new ConflictingCommandsWarning()
+                return new ConflictingCommandsWarning()
                 {
                     Conflict = Conflict.Overlapping,
                     RelatedLine = cmd1.Line,
                     OffendingLine = cmd2.Line,
                     WarningLevel = GetWarningLevelForTimeConflict(cmd1, cmd2),
-                });
+                };
             }
-
-            return list;
+            else //no warning
+                return null;
         }
 
         public List<ConflictingCommandsWarning> FindConflictingCommandTypes(VisualElement visualElement)

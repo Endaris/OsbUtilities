@@ -2,16 +2,18 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Contracts
+namespace Contracts.Commands
 {
-    public class CommandScale
+    public class CommandPosition
     {
-        public CommandScale() { }
-        public CommandScale(double x, double y)
+        public CommandPosition() { }
+
+        public CommandPosition(double x, double y)
         {
             X = x;
             Y = y;
         }
+
         public double X { get; set; }
         public double Y { get; set; }
 

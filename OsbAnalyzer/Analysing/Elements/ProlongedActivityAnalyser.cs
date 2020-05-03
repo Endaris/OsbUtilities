@@ -33,7 +33,7 @@ namespace OsbAnalyser.Analysing.Elements
                 return new List<StoryboardWarning>() { warning };
         }
 
-        public StoryboardWarning FindProlongedActivity(VisualElement visualElement)
+        public ProlongedActivityWarning FindProlongedActivity(VisualElement visualElement)
         {
             var visibleTimes = VisibilityAnalyser.GetVisibleTimes(AnalysingHelper.ResolveTriggers(AnalysingHelper.ResolveLoops(visualElement.Commands)));
 

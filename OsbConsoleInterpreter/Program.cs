@@ -19,7 +19,7 @@ namespace OsbConsoleInterpreter
                 var sb = mapReader.GetStoryboard();
                 var storyboardInfo = new StoryboardInfo(sb);
                 var t = storyboardInfo.GenerateSpriteData();
-                var osbAnalyser = new OsbAnalyser.OsbAnalyser();
+                var osbAnalyser = new OsbAnalyser.StoryboardAnalyser();
                 var analysedSb = osbAnalyser.Analyse(sb);
                 List<string> output = new List<string>();
                 analysedSb.AnalysedElements.ToList().ForEach(e => 

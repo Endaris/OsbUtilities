@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Contracts;
+using Contracts.Commands;
 using OsbAnalyser.Contracts;
 using OsbAnalyser.Warnings;
 

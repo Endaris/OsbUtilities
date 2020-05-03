@@ -9,14 +9,15 @@ namespace Contracts.Commands
     {
         public IEnumerable<IOsbSpriteCommand> OsbCommands { get; set; }
         public double StartTime { get; set; }
-        public double EndTime => StartTime + LoopCount * OsbCommands.Max(c => c.EndTime);
-        public double Duration => EndTime - StartTime;
-        public string Identifier { get; set; }
+        public double ActualStartTime => StartTime + OsbCommands.Min(c => c.StartTime);
+        public double EndTime => ActualStartTime + LoopCount * LoopDuration;
+        public double Duration => EndTime - ActualStartTime;
+        public string Identifier => "L";
         public int Line { get; set; }
         public int LoopCount { get; set; }
         public double LoopDuration { get
             {
-                return OsbCommands.Select(c => c.EndTime).OrderBy(t => t).Last();
+                return OsbCommands.Max(c => c.EndTime) - OsbCommands.Min(c => c.StartTime);
             } 
         }
 

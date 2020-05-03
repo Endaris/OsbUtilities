@@ -21,6 +21,14 @@ namespace MapReader
             var content = GetOsbContent();
             var storyboard = osbReader.GetMainStoryboard(content);
             storyboard.FilePath = GetFileName();
+
+            ResourceReader resourceReader = new ResourceReader(Path);
+            foreach(var visualElement in storyboard.OsbElements)
+            {
+                if (!storyboard.Resources.ContainsKey(visualElement.RelativePath))
+                    storyboard.Resources.Add(visualElement.RelativePath, resourceReader.GetResource(visualElement));
+            }
+
             return storyboard;
         }
 

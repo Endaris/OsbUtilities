@@ -16,7 +16,6 @@ namespace OsbAnalyser.Test
         {
             new LoopCommand()
             {
-                Identifier = "L",
                 Line = 1,
                 LoopCount = 24,
                 StartTime = 11599,
@@ -27,7 +26,6 @@ namespace OsbAnalyser.Test
                         StartTime = 0,
                         EndTime = 624,
                         Line = 2,
-                        Identifier = "S",
                         StartValue = 0.24,
                         EndValue = 0.2,
                     },
@@ -36,7 +34,6 @@ namespace OsbAnalyser.Test
                         StartTime = 624,
                         EndTime = 724,
                         Line = 3,
-                        Identifier = "S",
                         StartValue = 0.2,
                         EndValue = 0.24,
                     },
@@ -46,7 +43,6 @@ namespace OsbAnalyser.Test
             {
                 StartTime = 10599,
                 EndTime = 10801,
-                Identifier = "M",
                 Line = 4,
                 StartValue = new CommandPosition(440, 240),
                 EndValue = new CommandPosition(440, 240),
@@ -64,13 +60,80 @@ namespace OsbAnalyser.Test
             Assert.True(result.ElementAt(48).Identifier == "M");
         }
 
+        private IEnumerable<IOsbCommand> resolveLoopsCmds2 = new List<IOsbCommand>()
+        {
+            new LoopCommand()
+            {
+                Line = 1,
+                LoopCount = 64,
+                StartTime = 0,
+                OsbCommands = new List<IOsbSpriteCommand>()
+                {
+                    new ScaleCommand()
+                    {
+                        Easing = OsbEasing.None,
+                        StartTime = 9736,
+                        EndTime = 9736,
+                        StartValue = 0.4666666,
+                        EndValue = 0.4666666,
+                        Line = 2,
+                    },
+                    new MoveCommand()
+                    {
+                        Easing = OsbEasing.InOutQuint,
+                        StartTime = 9736,
+                        EndTime = 10433,
+                        StartValue = new CommandPosition(320,240),
+                        EndValue = new CommandPosition(320, 229.3333),
+                        Line = 3,
+                    },
+                    new RotateCommand()
+                    {
+                        Easing = OsbEasing.InOutQuint,
+                        StartTime = 9736,
+                        EndTime = 10433,
+                        StartValue = 0,
+                        EndValue = 0.02133331,
+                        Line = 4,
+                    },
+                    new MoveCommand()
+                    {
+                        Easing = OsbEasing.InOutQuint,
+                        StartTime = 10433,
+                        EndTime = 11131,
+                        StartValue = new CommandPosition(320,229.3333),
+                        EndValue = new CommandPosition(320, 240),
+                        Line = 5,
+                    },
+                    new RotateCommand()
+                    {
+                        Easing = OsbEasing.InOutQuint,
+                        StartTime = 10433,
+                        EndTime = 11131,
+                        StartValue = 0.02133331,
+                        EndValue = 0,
+                        Line = 6,
+                    },
+                }
+            }
+        };
+
+        [Fact]
+        public void ResolveLoopsTest2()
+        {
+            var result = AnalysingHelper.ResolveLoops(resolveLoopsCmds2);
+
+            Assert.True(result.Count() == 5 * 64);
+            Assert.True(result.OrderBy(c => c.StartTime).First().StartTime == 9736);
+            Assert.True(result.OrderBy(c => c.EndTime).Last().EndTime == 9736 + 64 * 1395); // = 99016
+        }
+
         private IEnumerable<IOsbCommand> resolveTriggerCmds = new List<IOsbCommand>()
         {
             new MoveCommand()
             {
                 StartTime = 290749,
                 EndTime = 295762,
-                Identifier = "M",
                 Line = 1,
                 StartValue = new CommandPosition(-83, 34),
                 EndValue = new CommandPosition(-98, 42.66026),
@@ -79,7 +142,6 @@ namespace OsbAnalyser.Test
             {
                 StartTime = 295762,
                 EndTime = 300775,
-                Identifier = "M",
                 Line = 2,
                 StartValue = new CommandPosition(-98, 42.66026),
                 EndValue = new CommandPosition(-98, 25.33975),
@@ -88,7 +150,6 @@ namespace OsbAnalyser.Test
             {
                 StartTime = 24665,
                 EndTime = 36177,
-                Identifier = "T",
                 Line = 3,
                 TriggerGroup = 0,
                 TriggerName = "HitSoundSoftClap",
@@ -97,7 +158,6 @@ namespace OsbAnalyser.Test
                     new VectorScaleCommand()
                     {
                         Line = 4,
-                        Identifier = "V",
                         StartTime = 0,
                         EndTime = 500,
                         Easing = OsbEasing.InElastic,

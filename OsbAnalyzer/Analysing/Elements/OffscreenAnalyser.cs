@@ -27,7 +27,11 @@ namespace OsbAnalyser.Analysing.Elements
             if (Resources.ContainsKey(visualElement.RelativePath))
             {
                 ImageResource imageResource = (ImageResource)Resources[visualElement.RelativePath];
-                //TODO
+                
+                if (imageResource != null)
+                {
+
+                }
             }
             else
                 return null;

@@ -19,7 +19,7 @@ namespace Contracts
         public CommandPosition InitialPosition { get; set; }
         public double X => InitialPosition.X;
         public double Y => InitialPosition.Y;
-        public double StartTime { get { return Commands.Select(c => c.StartTime).OrderBy(t => t).First(); } }
+        public double StartTime { get { return Commands.Select(c => c.StartTime).OrderBy(t => t).FirstOrDefault(); } }
         public double EndTime { 
             get { 
                 return Commands.Select(c => 
@@ -30,7 +30,7 @@ namespace Contracts
                             return t.EndTime + t.OsbCommands.Select(c => c.EndTime).OrderBy(t => t).Last();
                         }
                         return c.EndTime; 
-                    }).OrderBy(t => t).Last(); 
+                    }).OrderBy(t => t).LastOrDefault(); 
             } 
         }
         public double Duration => EndTime - StartTime;

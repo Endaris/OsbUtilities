@@ -31,7 +31,6 @@ namespace MapReader.Parsing
                     else
                     {
                         osbElement.Commands = osbElement.Commands.Append(ParseCommandLine(element.Lines[i], element.LineStart + i, osbElement.InitialPosition));
-
                     }
                 }
 

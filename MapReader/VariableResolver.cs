@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using MapReader.Parsing;
 
 namespace MapReader
 {
@@ -12,8 +13,8 @@ namespace MapReader
         {
             ContentReader contentReader = new ContentReader();
 
-            var variableSection = contentReader.GetVariableSection(content);
-            var eventSection = contentReader.GetEventSection(content);
+            var variableSection = SectionParser.GetSection(content, "[Variables]");
+            var eventSection = SectionParser.GetSection(content, "[Events]");
 
             variableSection.ForEach(line => AddToDictionary(line));
 

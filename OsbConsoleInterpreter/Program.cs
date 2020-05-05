@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using OsbAnalyser.Analysing.Elements;
 using OsbAnalyser.Analysing.Storyboard;
 using OsbAnalyser.Contracts;
 
@@ -16,10 +17,21 @@ namespace OsbConsoleInterpreter
                 string path = args[0];
 
                 MapReader.MapReader mapReader = new MapReader.MapReader(path);
+                var resources = mapReader.GetResources();
                 var sb = mapReader.GetStoryboard();
                 var storyboardInfo = new StoryboardInfo(sb);
                 var t = storyboardInfo.GenerateSpriteData();
-                var osbAnalyser = new OsbAnalyser.StoryboardAnalyser();
+
+                List<IAnalyser> Analysers = new List<IAnalyser>()
+                {
+                    new ConflictAnalyser(),
+                    new ProlongedActivityAnalyser(),
+                    new FadeOutAnalyser(),
+                    new IllogicalAnalyser(),
+                    new RedundancyAnalyser(),
+                    //new OffscreenAnalyser(resources),
+                };
+                var osbAnalyser = new OsbAnalyser.StoryboardAnalyser(Analysers);
                 var analysedSb = osbAnalyser.Analyse(sb);
                 List<string> output = new List<string>();
                 analysedSb.AnalysedElements.ToList().ForEach(e => 

@@ -22,8 +22,6 @@ namespace MapReader
 
         private List<string> Prepare(List<string> fileContent)
         {
-            //TODO: Implement converting variables into their respective values and remove the variables part from the osbContent
-            // for now the assumption is made that there is no longer a variable section and all variables are already applied in the event section
             VariableResolver variableResolver = new VariableResolver();
             return variableResolver.Resolve(fileContent);
         }

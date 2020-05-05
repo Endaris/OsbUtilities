@@ -14,20 +14,24 @@ namespace OsbAnalyser.Analysing.Helper
             SortedDictionary<double, bool> sortedFadeTimes = GetSortedFadeTimes(commands);
 
             List<Tuple<double, double>> list = new List<Tuple<double, double>>();
-            bool visible = false;
-            double startOfCurrentState = sortedFadeTimes.First().Key;
 
-            for (int i = 0; i < sortedFadeTimes.Count; i++)
+            if (sortedFadeTimes.Count() > 0)
             {
-                var element = sortedFadeTimes.ElementAt(i);
-                if (element.Value != visible)
+                bool visible = false;
+                double startOfCurrentState = sortedFadeTimes.First().Key;
+
+                for (int i = 0; i < sortedFadeTimes.Count; i++)
                 {
-                    if (visible)
+                    var element = sortedFadeTimes.ElementAt(i);
+                    if (element.Value != visible)
                     {
-                        list.Add(new Tuple<double, double>(startOfCurrentState, element.Key));
+                        if (visible)
+                        {
+                            list.Add(new Tuple<double, double>(startOfCurrentState, element.Key));
+                        }
+                        startOfCurrentState = element.Key;
+                        visible = element.Value;
                     }
-                    startOfCurrentState = element.Key;
-                    visible = element.Value;
                 }
             }
             return list;
@@ -39,7 +43,11 @@ namespace OsbAnalyser.Analysing.Helper
             List<KeyValuePair<double, bool>> fadeTimes = new List<KeyValuePair<double, bool>>();
             if (!commands.Any(c => c is FadeCommand))
             {
-                if (commands.Any(c => c.EndTime > c.StartTime))
+                if (commands.Count() == 0)
+                {
+                    //do nothing
+                }
+                else if (commands.Any(c => c.EndTime > c.StartTime))
                 {
                     fadeTimes.Add(KeyValuePair.Create<double, bool>(commands.OrderBy(c => c.StartTime).FirstOrDefault().StartTime, true));
                     fadeTimes.Add(KeyValuePair.Create<double, bool>(commands.OrderBy(c => c.EndTime).LastOrDefault().EndTime, false));

@@ -14,4 +14,8 @@
     <ProjectReference Include="..\Contracts\Contracts.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Parsing\Beatmap\" />
+  </ItemGroup>
+
 </Project>

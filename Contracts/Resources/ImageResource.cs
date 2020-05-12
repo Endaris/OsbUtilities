@@ -22,7 +22,11 @@ namespace Contracts.Resources
             if (File.Exists(FullPath))
             {
                 FileSize = new FileInfo(FullPath).Length;
-                Image = Image.FromFile(FullPath);
+                //copy construct so the file isn't getting locked
+                using (var img = Image.FromFile(FullPath))
+                {
+                    Image = new Bitmap(img);
+                }
             }
         }
     }

@@ -11,46 +11,43 @@ namespace OsbAnalyser
 {
     public class StoryboardAnalyser
     {
+        private readonly IEnumerable<IAnalyser> Analysers;
+
+        public StoryboardAnalyser(IEnumerable<IAnalyser> Analysers)
+        {
+            this.Analysers = Analysers;
+        }
+
         public AnalysedStoryboard Analyse(Storyboard storyboard)
         {
-            List<IAnalyser> Analysers = new List<IAnalyser>()
-            {
-                new ConflictAnalyser(),
-                new ProlongedActivityAnalyser(),
-                new FadeOutAnalyser(),
-                new IllogicalAnalyser(),
-                new RedundancyAnalyser(),
-                //new OffscreenAnalyser(storyboard.Resources),
-            };
-
             return new AnalysedStoryboard()
             {
-                AnalysedElements = storyboard.OsbElements.Select(e => Analyse(e, Analysers))
+                AnalysedElements = storyboard.OsbElements.Select(e => Analyse(e))
             };
         }
 
-        public AnalysedElement Analyse(VisualElement visualElement, List<IAnalyser> analysers)
+        public AnalysedElement Analyse(VisualElement visualElement)
         {
             return new AnalysedElement()
             {
                 VisualElement = visualElement,
-                StoryboardWarnings = GenerateWarnings(visualElement, analysers),
+                StoryboardWarnings = GenerateWarnings(visualElement),
             };
         }
 
-        private List<StoryboardWarning> GenerateWarnings(VisualElement visualElement, List<IAnalyser> analysers)
+        private List<StoryboardWarning> GenerateWarnings(VisualElement visualElement)
         {
             List<StoryboardWarning> storyboardWarnings = new List<StoryboardWarning>();
             if (visualElement.Commands?.Count() > 0)
             {
-                analysers.ForEach(a => storyboardWarnings.AddRange(a.Analyse(visualElement)));
+                Analysers.ToList().ForEach(a => storyboardWarnings.AddRange(a.Analyse(visualElement)));
             }    
             else
             {
                 storyboardWarnings.Add(new ObsoleteSpriteWarning()
                 {
                     OffendingLine = visualElement.Line,
-                    WarningLevel = Contracts.Warnings.WarningLevel.Critical
+                    WarningLevel = WarningLevel.Critical
                 });
             }
                 

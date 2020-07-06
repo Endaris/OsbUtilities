@@ -12,7 +12,7 @@ namespace OsbAnalyser.Warnings
 
         public override string ToString()
         {
-            return $"Active time of sprite at line {OffendingLine} is prolonged for {timeProlonged}ms ({percentageProlonged}% of its active time) unnecessarily.";
+            return $"Active time of sprite at line {OffendingLine} is prolonged for {timeProlonged}ms ({percentageProlonged * 100}% of its active time) unnecessarily.";
         }
     }
 }

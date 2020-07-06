@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -52,7 +53,10 @@ namespace OsbAnalyser.Contracts
                 ActiveCommandData = new Dictionary<int, int>(dataPointCount);
                 VisibleCommandData = new Dictionary<int, int>(dataPointCount);
 
-                IEnumerable<VisualElementInfo> list = visualElements.Select(e => new VisualElementInfo(e));
+                //if we don't put this into a fresh and new IEnumerable the multithreading part makes us crash
+                //that's (probably) because the select only gets evaluated when the list is first used which is within the multithreading part
+                //and then we lose - readonly just to make clear that nothing happens to the list
+                var list = new ReadOnlyCollection<VisualElementInfo>(visualElements.Select(e => new VisualElementInfo(e)).ToList());
                 HashSet<int> times = new HashSet<int>(dataPointCount);
 
                 for (int time = (int)startTime; time < endTime; time += dx)
@@ -75,7 +79,7 @@ namespace OsbAnalyser.Contracts
             });           
         }
 
-        private DataPoint GetDataPoint(IEnumerable<VisualElementInfo> list, int time)
+        private DataPoint GetDataPoint(IList<VisualElementInfo> list, int time)
         {
             DataPoint totalDataPoint = new DataPoint();
             object o = new object();

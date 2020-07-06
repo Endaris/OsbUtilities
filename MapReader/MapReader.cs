@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Contracts;
+using Contracts.Resources;
 
 namespace MapReader
 {
@@ -16,30 +17,43 @@ namespace MapReader
         }
 
         public Storyboard GetStoryboard()
-        {
-            OsbReader osbReader = new OsbReader();
-            var content = GetOsbContent();
-            var storyboard = osbReader.GetMainStoryboard(content);
-            storyboard.FilePath = GetFileName();
-
-            ResourceReader resourceReader = new ResourceReader(Path);
-            foreach(var visualElement in storyboard.OsbElements)
+        {           
+            string filename = Directory.GetFiles(Path, "*.osb").FirstOrDefault();
+            if (!string.IsNullOrEmpty(filename))
             {
-                if (!storyboard.Resources.ContainsKey(visualElement.RelativePath))
-                    storyboard.Resources.Add(visualElement.RelativePath, resourceReader.GetResource(visualElement));
+                OsbReader osbReader = new OsbReader();
+                var content = File.ReadAllLines(System.IO.Path.Combine(Path, filename)).ToList();
+                var storyboard = osbReader.GetMainStoryboard(content);
+                storyboard.FilePath = filename;
+
+                return storyboard;                
             }
-
-            return storyboard;
+            else
+            {
+                return null;
+            }            
         }
 
-        private string GetFileName()
+        private List<string> ignoredExtensions = new List<string>() { ".osu", ".osb" };
+
+        public IDictionary<string, IResource> GetResources()
         {
-            return Directory.GetFiles(Path, "*.osb").FirstOrDefault();
+            return GetResources(new Dictionary<string, IResource>(), Path);
         }
 
-        private List<string> GetOsbContent()
+        private IDictionary<string, IResource> GetResources(IDictionary<string, IResource> dic, string directory)
         {
-            return File.ReadAllLines(System.IO.Path.Combine(Path, GetFileName())).ToList();
+            ResourceReader resourceReader = new ResourceReader(directory);
+            foreach (var fsEntry in Directory.EnumerateFileSystemEntries(directory))
+            {
+                FileAttributes fileAttributes = File.GetAttributes(fsEntry);
+                if (fileAttributes.HasFlag(FileAttributes.Directory))
+                    dic = GetResources(dic, fsEntry);
+                else
+                    if (!ignoredExtensions.Contains(System.IO.Path.GetExtension(directory).ToLower()))
+                        dic.Add(System.IO.Path.GetRelativePath(Path, fsEntry), resourceReader.GetResource(fsEntry));
+            }
+            return dic;
         }
     }
 }

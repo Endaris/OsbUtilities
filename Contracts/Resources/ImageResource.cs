@@ -14,15 +14,19 @@ namespace Contracts.Resources
         public Image Image { get; private set; }
         public SizeF Size => Image.Size;
 
-        public ImageResource(string mapPath, string relativePath)
+        public ImageResource(string mapPath, string fullPath)
         {
-            RelativePath = relativePath;
-            FullPath = Path.Combine(mapPath, relativePath);
+            RelativePath = Path.GetRelativePath(mapPath, fullPath);
+            FullPath = fullPath;
 
             if (File.Exists(FullPath))
             {
                 FileSize = new FileInfo(FullPath).Length;
-                Image = Image.FromFile(FullPath);
+                //copy construct so the file isn't getting locked
+                using (var img = Image.FromFile(FullPath))
+                {
+                    Image = new Bitmap(img);
+                }
             }
         }
     }

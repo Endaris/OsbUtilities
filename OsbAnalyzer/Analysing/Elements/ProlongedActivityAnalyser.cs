@@ -35,6 +35,9 @@ namespace OsbAnalyser.Analysing.Elements
 
         public ProlongedActivityWarning FindProlongedActivity(VisualElement visualElement)
         {
+            if (visualElement.Commands.Any(c => c is TriggerCommand))
+                return null;
+
             var visibleTimes = VisibilityAnalyser.GetVisibleTimes(AnalysingHelper.ResolveTriggers(AnalysingHelper.ResolveLoops(visualElement.Commands)));
 
             double timeProlonged;

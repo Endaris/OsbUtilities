@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Contracts;
+using Contracts.Gameplay;
 using Contracts.Resources;
 
 namespace MapReader
@@ -32,6 +33,22 @@ namespace MapReader
             {
                 return null;
             }            
+        }
+
+        public Beatmap GetBeatmap(string difficultyName)
+        {
+            var osuReader = new OsuReader();
+            var diffs = Directory.GetFiles(Path).Where(p => p.EndsWith(".osu") && p.Contains($"[{difficultyName}]"));
+
+            if (diffs.Count() == 0)
+            {
+                Console.WriteLine($"Couldn't find difficulty with name {difficultyName}");
+                return null;
+            }
+            else
+            {
+                return osuReader.GetBeatmap(diffs.First());
+            }
         }
 
         private List<string> ignoredExtensions = new List<string>() { ".osu", ".osb" };

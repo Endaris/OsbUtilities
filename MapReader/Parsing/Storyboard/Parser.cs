@@ -316,14 +316,19 @@ namespace MapReader.Parsing
             switch (layerName)
             {
                 case "Background":
+                case "0":
                     return OsbLayer.Background;
                 case "Fail":
+                case "1":
                     return OsbLayer.Fail;
                 case "Pass":
+                case "2":
                     return OsbLayer.Pass;
                 case "Foreground":
+                case "3":
                     return OsbLayer.Foreground;
                 case "Overlay":
+                case "4":
                     return OsbLayer.Overlay;
                 default:
                     throw new FormatException($"Unknown layername '{layerName}'");

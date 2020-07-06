@@ -16,6 +16,15 @@ namespace MapReader
         {
             List<string> OsbContent = Prepare(fileContent);
             EventsToObjectMapper eventsToObjectMapper = new EventsToObjectMapper();
+            eventsToObjectMapper.LineOffset = fileContent.Count() - OsbContent.Count();
+            return eventsToObjectMapper.GetStoryboard(OsbContent);
+        }
+
+        public Storyboard GetDiffStoryboard(List<string> fileContent)
+        {
+            List<string> OsbContent = Prepare(fileContent);
+            EventsToObjectMapper eventsToObjectMapper = new EventsToObjectMapper();
+            eventsToObjectMapper.LineOffset = fileContent.Count() - OsbContent.Count();
             return eventsToObjectMapper.GetStoryboard(OsbContent);
         }
 

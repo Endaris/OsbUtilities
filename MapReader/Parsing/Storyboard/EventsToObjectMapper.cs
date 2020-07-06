@@ -12,7 +12,9 @@ namespace MapReader.Parsing
 {
     public class EventsToObjectMapper
     {
-        public Storyboard GetStoryboard(List<string> content)
+        public int LineOffset = 0;
+
+        public Storyboard GetStoryboard(IEnumerable<string> content)
         {
             int lineStart = GetEventSectionStartAsLineNumber(content);
 
@@ -31,23 +33,25 @@ namespace MapReader.Parsing
             return storyboard;
         }
 
-        private int GetEventSectionStartAsLineNumber(List<string> content)
+        private int GetEventSectionStartAsLineNumber(IEnumerable<string> content)
         {
-            int index = content.IndexOf("[Events]");
+            int index = content.ToList().IndexOf("[Events]");
             if (index < 0)
                 throw new InvalidOperationException("Give me an [Events] line so I know where to start...");
             else
                 return index + 1;
         }
 
-        private List<ParsingElement> GetParsingElements(List<string> content, int lineStart)
+        private List<ParsingElement> GetParsingElements(IEnumerable<string> content, int lineStart)
         {
             List<ParsingElement> parsingElements = new List<ParsingElement>();
             ParsingElement parsingElement = new ParsingElement();
+
+            bool skip = true;
             //<= because it's 1 based for the linenumber, not 0 based for the index
-            for (int lineNumber = lineStart; lineNumber <= content.Count; lineNumber++)
+            for (int lineNumber = lineStart; lineNumber <= content.Count(); lineNumber++)
             {
-                string line = content[lineNumber - 1];
+                string line = content.ElementAt(lineNumber - 1);
 
                 //we reached the end of the eventsection
                 if (string.IsNullOrWhiteSpace(line))
@@ -57,13 +61,17 @@ namespace MapReader.Parsing
                 if (line.StartsWith("//Storyboard Sound Samples"))
                     break;
 
-                if (line.StartsWith("//") || line == "[Events]")
-                    continue;
+                //ignore background and video events and break periods for simplicity's sake (for now)
+                if (line.StartsWith("//Storyboard Layer 0 (Background)"))
+                    skip = false;
 
-                if (!line.StartsWith(' '))
+                if (line.StartsWith("//") || line == "[Events]")
+                    continue;            
+
+                if (!line.StartsWith(' ') && !skip)
                 {
                     parsingElement = new ParsingElement();
-                    parsingElement.LineStart = lineNumber;
+                    parsingElement.LineStart = lineNumber + LineOffset;
                     parsingElements.Add(parsingElement);
                 }
 

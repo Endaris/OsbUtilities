@@ -2,7 +2,7 @@
   "profiles": {
     "OsbConsoleInterpreter": {
       "commandName": "Project",
-      "commandLineArgs": "\"C:\\Program Files\\osu!\\Songs\\1195463 Task Horizon - Phase Prism\""
+      "commandLineArgs": "\"C:\\Program Files\\osu!\\Songs\\527869 Toromaru - Enigma\" \"NOVICE\""
     }
   }
 }

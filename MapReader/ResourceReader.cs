@@ -37,7 +37,7 @@ namespace MapReader
             return null;
         }
 
-        private List<string> imgExtensions = new List<string>() { ".jpg", ".jpeg", ".gif", ".png", ".bpm", ".tiff",};
+        private List<string> imgExtensions = new List<string>() { ".jpg", ".jpeg", ".png",};
 
         private bool IsProbablyAnImage(string FilePath)
         {

@@ -5,6 +5,8 @@ using System.Linq;
 using OsbAnalyser.Analysing.Elements;
 using OsbAnalyser.Analysing.Storyboard;
 using OsbAnalyser.Contracts;
+using OsbAnalyzer.Analysing.Elements;
+using OsbAnalyzer.Contracts.Warnings;
 
 namespace OsbConsoleInterpreter
 {
@@ -17,7 +19,6 @@ namespace OsbConsoleInterpreter
                 string path = args[0];
 
                 MapReader.MapReader mapReader = new MapReader.MapReader(path);
-                var resources = mapReader.GetResources();
                 var sb = mapReader.GetStoryboard();
                 var storyboardInfo = new StoryboardInfo(sb);
                 var t = storyboardInfo.GenerateSpriteData();
@@ -29,7 +30,7 @@ namespace OsbConsoleInterpreter
                     new FadeOutAnalyser(),
                     new IllogicalAnalyser(),
                     new RedundancyAnalyser(),
-                    //new OffscreenAnalyser(resources),
+                    new CommandCountAnalyser(),
                 };
                 var osbAnalyser = new OsbAnalyser.StoryboardAnalyser(Analysers);
                 var analysedSb = osbAnalyser.Analyse(sb);

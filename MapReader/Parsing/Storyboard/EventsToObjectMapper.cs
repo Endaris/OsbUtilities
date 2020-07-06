@@ -53,6 +53,10 @@ namespace MapReader.Parsing
                 if (string.IsNullOrWhiteSpace(line))
                     break;
 
+                //we don't do storyboarded hitsounds (yet)
+                if (line.StartsWith("//Storyboard Sound Samples"))
+                    break;
+
                 if (line.StartsWith("//") || line == "[Events]")
                     continue;
 

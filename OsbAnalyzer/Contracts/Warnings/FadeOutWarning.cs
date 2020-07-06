@@ -11,7 +11,7 @@ namespace OsbAnalyser.Contracts.Warnings
 
         public override string ToString()
         {
-            return $"Sprite at line {OffendingLine} is invisible for {timeInvisible}ms ({percentageInvisible}%) of its active time.";
+            return $"Sprite at line {OffendingLine} is invisible for {timeInvisible}ms ({percentageInvisible * 100}%) of its active time.";
         }
     }
 }

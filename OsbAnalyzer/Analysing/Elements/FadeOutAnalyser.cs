@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Contracts;
+using Contracts.Commands;
 using OsbAnalyser.Analysing.Helper;
 using OsbAnalyser.Contracts;
 using OsbAnalyser.Contracts.Warnings;
@@ -33,6 +34,9 @@ namespace OsbAnalyser.Analysing.Elements
 
         public FadeOutWarning FindExcessiveFadeOutTimes(VisualElement visualElement)
         {
+            if (visualElement.Commands.Any(c => c is TriggerCommand))
+                return null;
+
             var visibleTimes = VisibilityAnalyser.GetVisibleTimes(AnalysingHelper.ResolveTriggers(AnalysingHelper.ResolveLoops(visualElement.Commands)));
 
             double timeInvisible;

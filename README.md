@@ -12,6 +12,10 @@ You can test it by providing a path to a mapset that contains a storyboard in .o
 ```
 OsbConsoleInterpreter.exe "C:\Program Files\osu!\Songs\104621 Rhythmics & Cat Like Thief - Summer Wars"
 ```
+Or try supplying a diffname in addition to analyse a diff-specific storyboard instead:
+```
+OsbConsoleInterpreter.exe "C:\Program Files\osu!\Songs\527869 Toromaru - Enigma" "NOVICE"
+```
 Note that this may take a while as a lot of data is generated and evaluated to generate the warnings and draw the graphs.
 
 When the evaluation is done you will find 3 files, StoryboardWarnings.txt, commandgraph.jpg and spritegraph.jpg in the mapset folder.

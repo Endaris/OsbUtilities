@@ -133,7 +133,11 @@ namespace OsbAnalyser.Contracts
                 VisualElement = visualElement;
                 VisibleTimes = new VisibilityAnalyser().GetVisibleTimes(visualElement.Commands);
                 HasTrigger = visualElement.Commands.Any(c => c is TriggerCommand);
-                CommandCount = VisualElement.Commands.Count();
+                CommandCount = VisualElement.Commands.Where(c => !(c is IOsbCompoundCommand)).Count()
+                                + VisualElement.Commands.Where(c => c is IOsbCompoundCommand)
+                                                        .Select(c => (IOsbCompoundCommand)c)
+                                                        .Sum(c => c.OsbCommands.Count());
+
             }
 
             public bool IsVisibleAt(int time)
